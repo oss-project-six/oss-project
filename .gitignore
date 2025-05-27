@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
-
+# Application 설정 파일
+application.yml
+application-local.yml
 # Log file
 *.log
 
