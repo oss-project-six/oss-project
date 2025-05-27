@@ -18,6 +18,8 @@ application-local.yml
 .gradle/
 build/
 out/
+src/main/resources/application.yml
+src/main/resources/application-local.yml
 
 # BlueJ files
 *.ctxt
