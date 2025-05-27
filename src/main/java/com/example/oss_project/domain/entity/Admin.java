@@ -13,22 +13,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
-public class User {
+@Table(name = "admin")
+public class Admin {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "admin_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long adminId;
 
-    @Column(name = "user_password",nullable = false)
-    private String password;
-
-    @Column(name = "user_name",nullable = false)
+    @Column(name = "admin_name")
     private String name;
 
-    @Column(name = "user_nickname",nullable = false)
+    @Column(name = "admin_nickname")
     private String nickname;
-
-    @Column(name = "user_company",nullable = false)
-    private String company;
 }
