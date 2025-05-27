@@ -5,6 +5,21 @@ application.yml
 application-local.yml
 # Log file
 *.log
+*.bin
+*.lock
+*.html
+
+#intellij
+.idea/
+*.iml
+
+
+# Gradle
+.gradle/
+build/
+out/
+src/main/resources/application.yml
+src/main/resources/application-local.yml
 
 # BlueJ files
 *.ctxt
