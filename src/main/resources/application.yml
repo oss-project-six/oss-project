@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: oss-project
+  profiles:
+    active: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev

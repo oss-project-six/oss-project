@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://oss-project-six-team.cfa8quc488hi.ap-southeast-2.rds.amazonaws.com:3306/oss_project_db?useSSL=false&serverTimezone=Asia/Seoul
+    username: admin
+    password: wjddbgus123
+    hikari:
+      pool-name: jpa-hikari-pool
+      maximum-pool-size: 5
+      jdbc-url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+      driver-class-name: ${spring.datasource.driver-class-name}
+      idle-timeout: 300000
+      max-lifetime: 300000
+      data-source-properties:
+        rewriteBatchedStatements: true
+  jpa:
+    open-in-view: false
+    database: mysql
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        default_batch_fetch_size: ${chunkSize:100}
+        jdbc.batch_size: 20
+        order_insert: true
+        order_updates: true
+        format_sql: true
+#  jpa:
+#    hibernate:
+#      ddl-auto: update     # 필요 시 update / validate 등 변경 가능
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
