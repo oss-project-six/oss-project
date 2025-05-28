@@ -29,6 +29,10 @@ public class BidHistory extends BaseEntity {
     @JoinColumn(name = "ad_id")
     private Ad ad;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ad_slot_id")
+    private AdSlot adSlot;
+
     @Column(name = "bid",nullable = false)
     private Long bid;
 

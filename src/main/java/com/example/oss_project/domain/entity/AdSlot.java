@@ -33,6 +33,15 @@ public class AdSlot {
     @Column(name = "ad_image_url")
     private String imageUrl;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "min_price")
+    private Long minPrice;
+
     @Column(name = "ad_loc_x")
     private Double locX;
 
