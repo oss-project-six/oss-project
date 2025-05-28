@@ -7,12 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "user")
 public class User {
     @Id
@@ -20,15 +24,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @Column(name = "user_login_id")
+    private String loginId;
+
     @Column(name = "user_password",nullable = false)
     private String password;
 
-    @Column(name = "user_name",nullable = false)
+    @Column(name = "user_name")
     private String name;
 
     @Column(name = "user_nickname",nullable = false)
     private String nickname;
 
-    @Column(name = "user_company",nullable = false)
+    @Column(name = "user_company")
     private String company;
 }
