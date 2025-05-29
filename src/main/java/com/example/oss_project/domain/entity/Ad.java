@@ -33,4 +33,12 @@ public class Ad {
 
     @Column(name = "ad_image_url")
     private String imageUrl;
+
+    // 디자인에 따라 추가함
+    @Column(name = "ad_description")
+    private String description;
+
+    // 디자인에 따라 추가함
+    @Column(name = "category")
+    private String category;
 }

@@ -1,8 +1,8 @@
 package com.example.oss_project.controller;
 
-import com.example.oss_project.domain.dto.AdRegisterRequestDto;
-import com.example.oss_project.domain.dto.AdSummaryResponseDto;
-import com.example.oss_project.service.other.AdService;
+import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
+import com.example.oss_project.domain.response.adslot.AdSummaryResponseDto;
+import com.example.oss_project.service.ad.AdService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,15 @@ public class AdController {
     }
 
     @GetMapping("/my/user/{userId}")
-    public ResponseEntity<List<AdSummaryResponseDto>> getMyAds(@PathVariable Long userId) {
-        List<AdSummaryResponseDto> ads = adService.getAdsByUserId(userId);
-        return ResponseEntity.ok(ads);
+    public ResponseEntity<List<com.example.oss_project.domain.response.ad.AdSummaryResponseDto>> getMyAds(@PathVariable Long userId) {
+        return ResponseEntity.ok(adService.getAdsByUserId(userId));
+    }
+
+
+    @GetMapping("/my/ad/{adId}")
+    public ResponseEntity<List<AdSummaryResponseDto>> getAdSlotsByAd(@PathVariable Long adId) {
+        List<AdSummaryResponseDto> result = adService.getAdSlotsWithBidAndCvInfo(adId);
+        return ResponseEntity.ok(result);
     }
 
 }

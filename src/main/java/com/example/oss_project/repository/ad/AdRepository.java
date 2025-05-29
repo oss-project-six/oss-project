@@ -1,4 +1,4 @@
-package com.example.oss_project.repository.other;
+package com.example.oss_project.repository.ad;
 
 import com.example.oss_project.domain.entity.Ad;
 import org.springframework.data.jpa.repository.JpaRepository;
