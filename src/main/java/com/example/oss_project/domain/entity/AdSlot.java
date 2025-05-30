@@ -3,6 +3,8 @@ package com.example.oss_project.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -20,8 +22,8 @@ public class AdSlot {
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
-    @OneToOne(mappedBy = "adSlot", fetch = FetchType.LAZY) // 양방향으로 변경함
-    private CvInfo cvInfo;
+    @OneToMany(mappedBy = "adSlot", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CvInfo> cvInfos;
 
     @Column(name = "ad_slot_description")
     private String description;

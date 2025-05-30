@@ -1,7 +1,9 @@
 package com.example.oss_project.service.ad;
 
-import com.example.oss_project.domain.response.adslot.AdSummaryResponseDto;
+import com.example.oss_project.domain.response.ad.AdSummaryResponseDto;
+import com.example.oss_project.domain.response.adslot.AdSlotSummaryResponseDto;
 import com.example.oss_project.domain.entity.*;
+import com.example.oss_project.domain.response.adslot.CvInfoDto;
 import com.example.oss_project.repository.ad.AdRepository;
 import com.example.oss_project.repository.adslot.AdSlotRepository;
 import com.example.oss_project.repository.bidhistory.BidHistoryRepository;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,66 +27,86 @@ public class AdService {
     private final BidHistoryRepository bidHistoryRepository;
     private final CvInfoRepository cvInfoRepository;
 
+    // AdService.java
     @Transactional
-    public void registerAd(AdRegisterRequestDto dto) {
-        User user = userRepository.findById(dto.getUserId())
+    public void registerAd(AdRegisterRequestDto dto, String imageUrl) {
+        User user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         Ad ad = Ad.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .imageUrl(dto.getImageUrl())
-                .category(dto.getCategory())
+                .name(dto.name())
+                .description(dto.description())
+                .imageUrl(imageUrl) // ← S3에서 받은 URL을 여기서 사용!
+                .category(dto.category())
                 .user(user)
                 .build();
 
         adRepository.save(ad);
     }
 
-    public List<com.example.oss_project.domain.response.ad.AdSummaryResponseDto> getAdsByUserId(Long userId) {
+
+    // 광고주가 등록한 광고 리스트 반환
+    public List<AdSummaryResponseDto> getAdsByUserId(Long userId) {
         List<Ad> ads = adRepository.findByUser_UserId(userId);
 
         return ads.stream().map(ad -> {
-            // BidHistory - 광고의 가장 최근 입찰이력 1개 (가장 최근 bid_id 등으로)
             BidHistory bidHistory = bidHistoryRepository.findTopByAdOrderByBidIdDesc(ad);
-            // CvInfo - 광고의 광고자리들에 대한 노출 정보 1개(예: 가장 최신 ad_slot에서)
-            CvInfo cvInfo = null;
+
+            List<CvInfo> cvInfos = null;
             if (bidHistory != null && bidHistory.getAdSlot() != null) {
-                cvInfo = cvInfoRepository.findByAdSlot(bidHistory.getAdSlot());
+                cvInfos = cvInfoRepository.findByAdSlot(bidHistory.getAdSlot());
             }
 
-            return new com.example.oss_project.domain.response.ad.AdSummaryResponseDto(
+            CvInfo cvInfo = null;
+            if (cvInfos != null && !cvInfos.isEmpty()) {
+                cvInfo = cvInfos.stream()
+                        .sorted((a, b) -> b.getTimeStamp().compareTo(a.getTimeStamp()))
+                        .findFirst()
+                        .orElse(null);
+            }
+
+            return new AdSummaryResponseDto(
                     ad.getName(),
                     ad.getImageUrl(),
-                    bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null, // enum → int
+                    bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                     bidHistory != null ? bidHistory.getBid() : null,
                     cvInfo != null ? cvInfo.getExposureScore() : null,
                     cvInfo != null ? cvInfo.getViewCount() : null
             );
-
         }).collect(Collectors.toList());
     }
 
 
-    public List<AdSummaryResponseDto> getAdSlotsWithBidAndCvInfo(Long adId) {
+    // 광고 하나에 대한 광고자리 + 입찰/노출 정보 반환
+    public List<AdSlotSummaryResponseDto> getAdSlotsWithBidAndCvInfo(Long adId) {
         List<BidHistory> bidHistories = bidHistoryRepository.findByAd_AdId(adId);
 
         return bidHistories.stream()
                 .map(bidHistory -> {
                     AdSlot adSlot = bidHistory.getAdSlot();
-                    CvInfo cvInfo = adSlot != null ? adSlot.getCvInfo() : null;
 
-                    return new AdSummaryResponseDto(
+                    // 여러 CvInfo 반환
+                    List<CvInfo> cvInfos = adSlot != null ? cvInfoRepository.findByAdSlot(adSlot) : List.of();
+
+                    // CvInfo → CvInfoDto 변환
+                    List<CvInfoDto> cvInfoDtoList = cvInfos.stream()
+                            .map(cvInfo -> new CvInfoDto(
+                                    cvInfo.getAvgTime(),
+                                    cvInfo.getExposureScore(),
+                                    cvInfo.getAttentionRatio(),
+                                    cvInfo.getViewCount()
+                            ))
+                            .collect(Collectors.toList());
+
+                    return new AdSlotSummaryResponseDto(
                             adSlot != null ? adSlot.getLocalName() : null,
                             bidHistory.getBid(),
-                            bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null, // Enum → int
-                            cvInfo != null ? cvInfo.getAvgTime() : null,
-                            cvInfo != null ? cvInfo.getExposureScore() : null,
-                            cvInfo != null ? cvInfo.getAttentionRatio() : null,
-                            cvInfo != null ? cvInfo.getViewCount() : null
+                            bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
+                            cvInfoDtoList   // DTO 리스트로 반환!
                     );
                 })
                 .collect(Collectors.toList());
     }
+
 
 }

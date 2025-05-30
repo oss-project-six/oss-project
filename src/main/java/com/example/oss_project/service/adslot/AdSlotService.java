@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,22 +26,22 @@ public class AdSlotService {
     private final BidHistoryRepository bidHistoryRepository;
 
     @Transactional
-    public void registerAdSlot(AdSlotRegisterRequestDto dto) {
-
-        Admin admin = adminRepository.findById(dto.getAdminId())
+    public void registerAdSlot(AdSlotRegisterRequestDto dto, String imageUrl) {
+        Admin admin = adminRepository.findById(dto.adminId())
                 .orElseThrow(() -> new RuntimeException("관리자 없음"));
 
         AdSlot adSlot = AdSlot.builder()
-                .localName(dto.getLocalName())
-                .description(dto.getDescription())
-                .imageUrl(dto.getImageUrl())
-                .address(dto.getAddress())
-                .size(dto.getSize())
+                .localName(dto.localName())
+                .description(dto.description())
+                .imageUrl(imageUrl)
+                .address(dto.address())
+                .size(dto.size())
                 .admin(admin)
                 .build();
 
         adSlotRepository.save(adSlot);
     }
+
 
     public List<AdSlotResponseDto> searchAdSlots(List<String> regions, String bidStatusStr, Long price) {
         List<AdSlot> allSlots = adSlotRepository.findAll();
@@ -52,9 +51,8 @@ public class AdSlotService {
                         || regions.stream().anyMatch(region ->
                         adSlot.getAddress() != null && adSlot.getAddress().contains(region)
                 ))
-                .collect(Collectors.toList());
+                .toList();
 
-        // ⭐ 여기가 핵심
         final BidStatus bidStatusFinal;
         if (bidStatusStr != null && !bidStatusStr.isEmpty()) {
             switch (bidStatusStr) {
@@ -73,7 +71,7 @@ public class AdSlotService {
 
             List<BidHistory> filteredHistories = histories.stream()
                     .filter(b -> bidStatusFinal == null || b.getBidStatus() == bidStatusFinal)
-                    .collect(Collectors.toList());
+                    .toList();
 
             Optional<BidHistory> maxBidHistoryOpt = filteredHistories.stream()
                     .max(Comparator.comparing(BidHistory::getBid));
@@ -93,5 +91,4 @@ public class AdSlotService {
         }
         return result;
     }
-
 }
