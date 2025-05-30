@@ -1,20 +1,15 @@
 package com.example.oss_project.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "adSlot")
 public class AdSlot {
@@ -26,6 +21,12 @@ public class AdSlot {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Admin admin;
+
+    @OneToMany(mappedBy = "adSlot", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CvInfo> cvInfos;
+
+    @Column(name = "ad_slot_description")
+    private String description;
 
     @Column(name = "ad_local_name", nullable = false)
     private String localName;

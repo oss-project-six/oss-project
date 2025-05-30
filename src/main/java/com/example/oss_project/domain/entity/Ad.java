@@ -9,12 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ad")
 public class Ad {
@@ -32,4 +33,12 @@ public class Ad {
 
     @Column(name = "ad_image_url")
     private String imageUrl;
+
+    // 디자인에 따라 추가함
+    @Column(name = "ad_description")
+    private String description;
+
+    // 디자인에 따라 추가함
+    @Column(name = "category")
+    private String category;
 }
