@@ -4,7 +4,7 @@ import java.util.List;
 
 public record AdSlotSummaryResponseDto(
         String localName,
-        Long bid,
+        Long bidMoney,
         Integer bidStatus,
         List<CvInfoDto> cvInfoList
 ) {}

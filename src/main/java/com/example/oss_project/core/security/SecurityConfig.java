@@ -25,7 +25,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ads/my").hasRole("USER")
+                        .requestMatchers("/ads/my").hasRole("ROLE_USER")
+                        .requestMatchers("/ads/adslot/regist").hasRole("ROLE_ADMIN")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -37,6 +38,4 @@ public class SecurityConfig {
         // BCrypt Encoder 사용
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-
 }
