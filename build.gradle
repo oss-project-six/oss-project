@@ -23,32 +23,49 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {// DB 연결용 MySQL 드라이버
+dependencies {
+	// Spring Data JPA 사용
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Spring Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// DB 연결용 MySQL 드라이버
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// 테스트 관련
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	//JWT
+	// Bean 검증용 유효성 검사
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// AWS S3 및 기타 서비스 연동용 Spring Cloud AWS
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// AWS SDK BOM
+	implementation platform('software.amazon.awssdk:bom:2.20.34')
+
+	// AWS SDK S3
+	implementation 'software.amazon.awssdk:s3'
+
+	// JWT 관련 - 토큰 생성/검증용
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	//security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// Jakarta Bean Validation API
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
-	//S3
-	implementation platform("software.amazon.awssdk:bom:2.25.16")
-	implementation 'software.amazon.awssdk:s3'
-	implementation 'software.amazon.awssdk:auth'
-
-	//test
-	testImplementation 'org.junit.jupiter:junit-jupiter-api'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-	testImplementation 'org.mockito:mockito-core'
-	testImplementation 'org.mockito:mockito-junit-jupiter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Hibernate Validator
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 }
 
 
