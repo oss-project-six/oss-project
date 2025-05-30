@@ -23,32 +23,33 @@ repositories {
 	mavenCentral()
 }
 
-// DB 연결용 MySQL 드라이버
-runtimeOnly 'com.mysql:mysql-connector-j'
+dependencies {// DB 연결용 MySQL 드라이버
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
-// 테스트 관련
-testImplementation 'org.springframework.boot:spring-boot-starter-test'
-testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// 테스트 관련
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-//JWT
-implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	//JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-//security
-implementation 'org.springframework.boot:spring-boot-starter-security'
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-//S3
-implementation platform("software.amazon.awssdk:bom:2.25.16")
-implementation 'software.amazon.awssdk:s3'
-implementation 'software.amazon.awssdk:auth'
+	//S3
+	implementation platform("software.amazon.awssdk:bom:2.25.16")
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:auth'
 
-//test
-testImplementation 'org.junit.jupiter:junit-jupiter-api'
-testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-testImplementation 'org.mockito:mockito-core'
-testImplementation 'org.mockito:mockito-junit-jupiter'
-testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//test
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
 
 
 tasks.named('test') {
