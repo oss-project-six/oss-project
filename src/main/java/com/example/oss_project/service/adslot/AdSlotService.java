@@ -8,10 +8,11 @@ import com.example.oss_project.domain.entity.Admin;
 import com.example.oss_project.domain.request.minPrice.MinPriceRegisterRequestDto;
 import com.example.oss_project.domain.response.adslot.AdSlotResponseDto;
 import com.example.oss_project.domain.type.BidStatus;
-import com.example.oss_project.repository.adslot.AdSlotRepository;
 import com.example.oss_project.repository.admin.AdminRepository;
-import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
 import com.example.oss_project.repository.minPrice.MinPriceRepository;
+import com.example.oss_project.repository.adSlot.AdSlotRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,16 +92,16 @@ public class AdSlotService {
                     .toList();
 
             Optional<BidHistory> maxBidHistoryOpt = filteredHistories.stream()
-                    .max(Comparator.comparing(BidHistory::getBid));
+                    .max(Comparator.comparing(BidHistory::getBidMoney));
 
             if (maxBidHistoryOpt.isPresent()) {
                 BidHistory maxBidHistory = maxBidHistoryOpt.get();
-                if (price == null || maxBidHistory.getBid() <= price) {
+                if (price == null || maxBidHistory.getBidMoney() <= price) {
                     result.add(new AdSlotResponseDto(
                             adSlot.getAdSlotId(),
                             adSlot.getLocalName(),
                             adSlot.getAddress(),
-                            maxBidHistory.getBid(),
+                            maxBidHistory.getBidMoney(),
                             maxBidHistory.getBidStatus() != null ? maxBidHistory.getBidStatus().ordinal() : null
                     ));
                 }

@@ -30,6 +30,9 @@ dependencies {
 	// Spring Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// Bean 검증용 유효성 검사
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -37,37 +40,38 @@ dependencies {
 	// DB 연결용 MySQL 드라이버
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// 테스트 관련
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	// Bean 검증용 유효성 검사
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	// AWS S3 및 기타 서비스 연동용 Spring Cloud AWS
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	// JWT 관련 - 토큰 생성/검증용
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// AWS SDK BOM
-	implementation platform('software.amazon.awssdk:bom:2.20.34')
+	implementation platform("software.amazon.awssdk:bom:2.25.16")
 
-	// AWS SDK S3
+	// AWS SDK S3 및 인증 모듈
 	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:auth'
 
-	// JWT 관련 - 토큰 생성/검증용
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	// Spring Cloud AWS 연동
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	// Jakarta Bean Validation API
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
 	// Hibernate Validator
 	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
-}
 
+	// 테스트 관련
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
