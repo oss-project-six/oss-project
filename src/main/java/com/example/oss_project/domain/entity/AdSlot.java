@@ -3,6 +3,7 @@ package com.example.oss_project.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,10 @@ public class AdSlot {
 
     @OneToMany(mappedBy = "adSlot", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CvInfo> cvInfos;
+
+    @OneToMany(mappedBy = "adSlot", cascade = CascadeType.ALL)
+    private List<MinPrice> minPrices = new ArrayList<>();
+
 
     @Column(name = "ad_slot_description")
     private String description;

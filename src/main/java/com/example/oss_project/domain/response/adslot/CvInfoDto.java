@@ -1,7 +1,7 @@
 package com.example.oss_project.domain.response.adslot;
 
 public record CvInfoDto(
-        Double avgTime,
+        Double midTime,         // avgTime → midTime
         Double exposureScore,
         Double attentionRatio,
         Long viewCount
