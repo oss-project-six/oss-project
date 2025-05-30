@@ -33,8 +33,8 @@ public class BidHistory extends BaseEntity {
     @JoinColumn(name = "ad_slot_id")
     private AdSlot adSlot;
 
-    @Column(name = "bid",nullable = false)
-    private Long bid;
+    @Column(name = "bid_money",nullable = false)
+    private Long bidMoney;
 
     @Column(name = "bid_status",nullable = false)
     private BidStatus bidStatus;

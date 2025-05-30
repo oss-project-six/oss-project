@@ -24,8 +24,8 @@ public class CvInfo {
     @Column(name = "cv_info_time_stamp",nullable = false)
     private LocalDateTime timeStamp;
 
-    @Column(name = "cv_info_avg_time",nullable = false)
-    private Double avgTime;
+    @Column(name = "cv_info_mid_time",nullable = false)
+    private Double midTime;
 
     @Column(name = "cv_info_exposure_score",nullable = false)
     private Double exposureScore;
