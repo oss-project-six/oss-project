@@ -57,19 +57,11 @@ public enum ErrorCode {
      * 404** Not Found
      */
     NOT_FOUND_END_POINT("40400", HttpStatus.NOT_FOUND, "존재하지 않는 엔드포인트입니다."),
-    NOT_FOUND_USER("40401", HttpStatus.NOT_FOUND, "해당 사용자가 존재하지 않습니다."),
-    NOT_FOUND_TEAM("40402", HttpStatus.NOT_FOUND, "해당 팀이 존재하지 않습니다."),
-    NOT_FOUND_MEMBER("40403", HttpStatus.NOT_FOUND, "해당 팀 멤버가 존재하지 않습니다."),
-    NOT_FOUND_REPORT("40404", HttpStatus.NOT_FOUND, "해당 신고가 존재하지 않습니다."),
-    NOT_FOUND_MATCH("40405", HttpStatus.NOT_FOUND, "매칭을 찾을 수 없습니다."),
-    NOT_FOUND_AUTHORIZATION_HEADER("40406", HttpStatus.NOT_FOUND, "요청 헤더 없음"),
-    NOT_FOUND_PUBADMIN("40407", HttpStatus.NOT_FOUND, "해당 주점 관리자가 존재하지 않습니다."),
-    NOT_FOUND_FESTAADMIN("40408", HttpStatus.NOT_FOUND, "해당 축기단이 존재하지 않습니다."),
-    NOT_FOUND_PUBS("40409", HttpStatus.NOT_FOUND, "해당 주점이 존재하지 않습니다."),
-    NOT_FOUND_VERIFY("40410", HttpStatus.NOT_FOUND, "전화번호 확인이 되어있지 않습니다."),
-    NOT_FOUND_RESERVE("40411", HttpStatus.NOT_FOUND, "예약정보를 찾을 수 없습니다."),
-    NOT_FOUND_LOST("40412", HttpStatus.NOT_FOUND, "분실물을 찾을 수 없습니다"),
-    NOT_FOUND_NOTICE("40413",HttpStatus.NOT_FOUND,"공지를 찾을 수 없습니다"),
+    NOT_FOUND_USER("40401", HttpStatus.NOT_FOUND, "해당 광고주가 존재하지 않습니다."),
+    NOT_FOUND_AD("40402", HttpStatus.NOT_FOUND, "해당 광고가 존재하지 않습니다."),
+    NOT_FOUND_ADSLOT("40403", HttpStatus.NOT_FOUND, "해당 광고 자리가 존재하지 않습니다."),
+    NOT_FOUND_ADMIN("40404", HttpStatus.NOT_FOUND, "해당 매체사가 존재하지 않습니다."),
+
 
     /**
      * 405** Method Not Allowed

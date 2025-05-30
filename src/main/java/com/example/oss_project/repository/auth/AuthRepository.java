@@ -13,8 +13,12 @@ public class AuthRepository {
     private final AuthUserJpaRepository authUserJpaRepository;
     private final AuthAdminJpaRepository authAdminJpaRepository;
 
-    public User findByLoginId(String loginId){
-        return authUserJpaRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+    public User findByUserLoginId(String userLoginId){
+        return authUserJpaRepository.findByLoginId(userLoginId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+    }
+
+    public Admin findByAdminLoginId(String loginId){
+        return authAdminJpaRepository.findByLoginId(loginId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ADMIN));
     }
 
     public User save(User user){ return authUserJpaRepository.save(user); }
