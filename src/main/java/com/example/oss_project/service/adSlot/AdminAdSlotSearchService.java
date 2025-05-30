@@ -1,9 +1,9 @@
-package com.example.oss_project.service.adslot;
+package com.example.oss_project.service.adSlot;
 
 import com.example.oss_project.domain.entity.AdSlot;
 import com.example.oss_project.domain.entity.BidHistory;
 import com.example.oss_project.domain.entity.CvInfo;
-import com.example.oss_project.domain.response.adslot.AdminAdSlotResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
 import com.example.oss_project.repository.adSlot.AdslotJpaRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
 import com.example.oss_project.repository.cvInfo.CvInfoJpaRepository;

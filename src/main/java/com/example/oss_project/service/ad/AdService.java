@@ -1,9 +1,9 @@
 package com.example.oss_project.service.ad;
 
 import com.example.oss_project.domain.response.ad.AdSummaryResponseDto;
-import com.example.oss_project.domain.response.adslot.AdSlotSummaryResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotSummaryResponseDto;
 import com.example.oss_project.domain.entity.*;
-import com.example.oss_project.domain.response.adslot.CvInfoDto;
+import com.example.oss_project.domain.response.adSlot.CvInfoDto;
 import com.example.oss_project.repository.ad.AdRepository;
 import com.example.oss_project.repository.adSlot.AdSlotRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;

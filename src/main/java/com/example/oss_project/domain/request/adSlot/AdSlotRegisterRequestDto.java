@@ -1,4 +1,4 @@
-package com.example.oss_project.domain.request.adslot;
+package com.example.oss_project.domain.request.adSlot;
 
 import com.example.oss_project.domain.request.minPrice.MinPriceRegisterRequestDto;
 

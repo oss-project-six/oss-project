@@ -4,7 +4,7 @@ import com.example.oss_project.core.common.CommonResponseDto;
 import com.example.oss_project.core.exception.CustomException;
 import com.example.oss_project.core.exception.ErrorCode;
 import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
-import com.example.oss_project.domain.response.adslot.AdSlotSummaryResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotSummaryResponseDto;
 import com.example.oss_project.service.ad.AdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.oss_project.core.s3.S3Util;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 

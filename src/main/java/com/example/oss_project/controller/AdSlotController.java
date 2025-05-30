@@ -1,12 +1,12 @@
 package com.example.oss_project.controller;
 
 import com.example.oss_project.core.common.CommonResponseDto;
-import com.example.oss_project.domain.request.adslot.AdSlotRegisterRequestDto;
-import com.example.oss_project.domain.request.adslot.AdSlotSearchRequestDto;
-import com.example.oss_project.domain.response.adslot.AdminAdSlotResponseDto;
-import com.example.oss_project.domain.response.adslot.AdSlotResponseDto;
-import com.example.oss_project.service.adslot.AdSlotService;
-import com.example.oss_project.service.adslot.AdminAdSlotSearchService;
+import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
+import com.example.oss_project.domain.request.adSlot.AdSlotSearchRequestDto;
+import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
+import com.example.oss_project.service.adSlot.AdSlotService;
+import com.example.oss_project.service.adSlot.AdminAdSlotSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,12 +1,12 @@
-package com.example.oss_project.service.adslot;
+package com.example.oss_project.service.adSlot;
 
 import com.example.oss_project.domain.entity.BidHistory;
 import com.example.oss_project.domain.entity.MinPrice;
-import com.example.oss_project.domain.request.adslot.AdSlotRegisterRequestDto;
+import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.entity.AdSlot;
 import com.example.oss_project.domain.entity.Admin;
 import com.example.oss_project.domain.request.minPrice.MinPriceRegisterRequestDto;
-import com.example.oss_project.domain.response.adslot.AdSlotResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
 import com.example.oss_project.domain.type.BidStatus;
 import com.example.oss_project.repository.admin.AdminRepository;
 import com.example.oss_project.repository.minPrice.MinPriceRepository;
