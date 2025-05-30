@@ -6,15 +6,14 @@ import com.example.oss_project.domain.entity.*;
 import com.example.oss_project.domain.response.adslot.CvInfoDto;
 import com.example.oss_project.repository.ad.AdRepository;
 import com.example.oss_project.repository.adslot.AdSlotRepository;
-import com.example.oss_project.repository.bidhistory.BidHistoryRepository;
-import com.example.oss_project.repository.cvinfo.CvInfoRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
+import com.example.oss_project.repository.cvInfo.CvInfoRepository;
 import com.example.oss_project.repository.user.UserRepository;
 import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

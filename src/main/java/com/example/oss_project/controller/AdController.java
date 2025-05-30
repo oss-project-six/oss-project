@@ -46,7 +46,6 @@ public class AdController {
         }
     }
 
-
     @GetMapping("/my/user/{userId}")
     public CommonResponseDto<List<com.example.oss_project.domain.response.ad.AdSummaryResponseDto>> getMyAds(@PathVariable Long userId) {
         return CommonResponseDto.ok(adService.getAdsByUserId(userId));
