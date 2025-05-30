@@ -11,7 +11,7 @@ import com.example.oss_project.domain.type.BidStatus;
 import com.example.oss_project.repository.admin.AdminRepository;
 import com.example.oss_project.repository.minPrice.MinPriceRepository;
 import com.example.oss_project.repository.adSlot.AdSlotRepository;
-import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class AdSlotService {
     private final AdSlotRepository adSlotRepository;
     private final AdminRepository adminRepository;
-    private final BidHistoryRepository bidHistoryRepository;
+    private final BidHistoryJpaRepository bidHistoryRepository;
     private final MinPriceRepository minPriceRepository;
 
     @Transactional

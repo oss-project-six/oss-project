@@ -5,9 +5,9 @@ import com.example.oss_project.domain.response.adslot.AdSlotSummaryResponseDto;
 import com.example.oss_project.domain.entity.*;
 import com.example.oss_project.domain.response.adslot.CvInfoDto;
 import com.example.oss_project.repository.ad.AdRepository;
-import com.example.oss_project.repository.adslot.AdSlotRepository;
-import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
-import com.example.oss_project.repository.cvInfo.CvInfoRepository;
+import com.example.oss_project.repository.adSlot.AdSlotRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
+import com.example.oss_project.repository.cvInfo.CvInfoJpaRepository;
 import com.example.oss_project.repository.user.UserRepository;
 import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ public class AdService {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final AdSlotRepository adSlotRepository;
-    private final BidHistoryRepository bidHistoryRepository;
-    private final CvInfoRepository cvInfoRepository;
+    private final BidHistoryJpaRepository bidHistoryRepository;
+    private final CvInfoJpaRepository cvInfoRepository;
 
     // AdService.java
     @Transactional
@@ -69,7 +69,7 @@ public class AdService {
                     ad.getName(),
                     ad.getImageUrl(),
                     bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
-                    bidHistory != null ? bidHistory.getBid() : null,
+                    bidHistory != null ? bidHistory.getBidMoney() : null,
                     cvInfo != null ? cvInfo.getExposureScore() : null,
                     cvInfo != null ? cvInfo.getViewCount() : null
             );
@@ -102,7 +102,7 @@ public class AdService {
 
                     return new AdSlotSummaryResponseDto(
                             adSlot != null ? adSlot.getLocalName() : null,
-                            bidHistory.getBid(),
+                            bidHistory.getBidMoney(),
                             bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                             cvInfoDtoList,
                             null // 평균값은 나중에 set (임시)
@@ -118,7 +118,7 @@ public class AdService {
         List<AdSlotSummaryResponseDto> resultWithAvg = result.stream()
                 .map(dto -> new AdSlotSummaryResponseDto(
                         dto.localName(),
-                        dto.bid(),
+                        dto.bidMoney(),
                         dto.bidStatus(),
                         dto.cvInfoList(),
                         overallMidTimeAvg // 평균값 넣기
