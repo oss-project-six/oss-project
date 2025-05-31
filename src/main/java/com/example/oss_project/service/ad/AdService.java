@@ -1,9 +1,11 @@
 package com.example.oss_project.service.ad;
 
 import com.example.oss_project.domain.response.ad.AdSummaryResponseDto;
+import com.example.oss_project.domain.response.ad.MyAdSummaryListResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotSummaryResponseDto;
 import com.example.oss_project.domain.entity.*;
 import com.example.oss_project.domain.response.adSlot.CvInfoDto;
+import com.example.oss_project.domain.response.adSlot.MyAdDetailResponseDto;
 import com.example.oss_project.repository.ad.AdRepository;
 import com.example.oss_project.repository.adSlot.AdSlotRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
@@ -16,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,88 +52,130 @@ public class AdService {
 
 
     // 광고주가 등록한 광고 리스트 반환
-    public List<AdSummaryResponseDto> getAdsByUserId(Long userId) {
+    public MyAdSummaryListResponseDto getAdsByUserIdWithStats(Long userId) {
         List<Ad> ads = adRepository.findByUser_UserId(userId);
 
-        return ads.stream().map(ad -> {
+        AtomicInteger completedBidAdCount = new AtomicInteger(0);
+        AtomicLong totalViewCount = new AtomicLong(0);
+        AtomicLong totalBidMoney = new AtomicLong(0);
+
+        List<AdSummaryResponseDto> adSummaries = ads.stream().map(ad -> {
             BidHistory bidHistory = bidHistoryRepository.findTopByAdOrderByBidIdDesc(ad);
 
-            List<CvInfo> cvInfos = null;
-            if (bidHistory != null && bidHistory.getAdSlot() != null) {
-                cvInfos = cvInfoRepository.findByAdSlot(bidHistory.getAdSlot());
-            }
+            Integer bidStatusOrdinal = (bidHistory != null && bidHistory.getBidStatus() != null)
+                    ? bidHistory.getBidStatus().ordinal() : null;
+            Long bidMoney = (bidHistory != null) ? bidHistory.getBidMoney() : null;
 
-            CvInfo cvInfo = null;
-            if (cvInfos != null && !cvInfos.isEmpty()) {
-                cvInfo = cvInfos.stream()
-                        .sorted((a, b) -> b.getTimeStamp().compareTo(a.getTimeStamp()))
+            // cv_info를 입찰 시간대 기준으로 찾아야 할 경우: 예시 코드
+            Double exposureScore = null;
+            Long viewCount = null;
+
+            if (bidHistory != null && bidHistory.getAdSlot() != null && bidHistory.getBidStartTime() != null) {
+                List<CvInfo> cvInfos = cvInfoRepository.findByAdSlot(bidHistory.getAdSlot());
+                CvInfo matchedCvInfo = cvInfos.stream()
+                        .filter(cv -> cv.getTimeStamp().equals(bidHistory.getBidStartTime()))
                         .findFirst()
                         .orElse(null);
+                if (matchedCvInfo != null) {
+                    exposureScore = matchedCvInfo.getExposureScore();
+                    viewCount = matchedCvInfo.getViewCount();
+                    totalViewCount.addAndGet(viewCount);
+                }
+            }
+
+            // 입찰 완료 광고 수 카운트 (예: BidStatus가 "입찰 완료" = 1)
+            if (bidStatusOrdinal != null && bidStatusOrdinal == 1) {
+                completedBidAdCount.incrementAndGet();
+                if (bidMoney != null) {
+                    totalBidMoney.addAndGet(bidMoney);
+                }
             }
 
             return new AdSummaryResponseDto(
                     ad.getName(),
                     ad.getImageUrl(),
-                    bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
-                    bidHistory != null ? bidHistory.getBidMoney() : null,
-                    cvInfo != null ? cvInfo.getExposureScore() : null,
-                    cvInfo != null ? cvInfo.getViewCount() : null
+                    bidStatusOrdinal,
+                    bidMoney,
+                    exposureScore,
+                    viewCount
             );
         }).collect(Collectors.toList());
+
+        return new MyAdSummaryListResponseDto(
+                adSummaries,
+                ads.size(),
+                completedBidAdCount.get(),
+                totalViewCount.get(),
+                totalBidMoney.get()
+        );
     }
 
-
     // 광고 하나에 대한 광고자리 + 입찰/노출 정보 반환
-    public List<AdSlotSummaryResponseDto> getAdSlotsWithBidAndCvInfo(Long adId) {
+    @Transactional(readOnly = true)
+    public MyAdDetailResponseDto getAdSlotsWithBidAndCvInfo(Long adId) {
         List<BidHistory> bidHistories = bidHistoryRepository.findByAd_AdId(adId);
 
-        // 전체 midTime 값을 모으기 위한 리스트
-        List<Double> allMidTimes = new ArrayList<>();
-
-        // 각 광고 자리 요약 생성
-        List<AdSlotSummaryResponseDto> result = bidHistories.stream()
+        List<AdSlotSummaryResponseDto> slotList = bidHistories.stream()
                 .map(bidHistory -> {
                     AdSlot adSlot = bidHistory.getAdSlot();
 
-                    List<CvInfo> cvInfos = adSlot != null ? cvInfoRepository.findByAdSlot(adSlot) : List.of();
-                    List<CvInfoDto> cvInfoDtoList = cvInfos.stream().map(cv -> {
-                        if (cv.getMidTime() != null) allMidTimes.add(cv.getMidTime());
-                        return new CvInfoDto(
-                                cv.getMidTime(), // 필드명 주의!
-                                cv.getExposureScore(),
-                                cv.getAttentionRatio(),
-                                cv.getViewCount()
-                        );
-                    }).toList();
+                    // ✅ "bid_end_time"과 "cv_info_time_stamp"가 완전히 같은 CvInfo만 반환
+                    List<CvInfoDto> cvInfoDtos;
+                    if (adSlot != null && bidHistory.getBidEndTime() != null) {
+                        Optional<CvInfo> cvInfoOpt = cvInfoRepository.findByAdSlotAndTimeStamp(
+                                adSlot, bidHistory.getBidEndTime());
+                        cvInfoDtos = cvInfoOpt
+                                .map(cvInfo -> List.of(new CvInfoDto(
+                                        cvInfo.getMidTime(),
+                                        cvInfo.getExposureScore(),
+                                        cvInfo.getAttentionRatio(),
+                                        cvInfo.getViewCount()
+                                )))
+                                .orElse(List.of());
+                    } else {
+                        cvInfoDtos = List.of();
+                    }
 
+                    // (아래는 기존 코드 그대로)
                     return new AdSlotSummaryResponseDto(
                             adSlot != null ? adSlot.getLocalName() : null,
                             bidHistory.getBidMoney(),
                             bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
-                            cvInfoDtoList,
-                            null // 평균값은 나중에 set (임시)
+                            cvInfoDtos
                     );
                 })
-                .collect(Collectors.toList());
+                .toList();
 
-        // 평균 midTime 계산
+        // --- 집계 필드 계산 (cvInfoList가 여러개가 아니라면 거의 1개씩임) ---
+        long totalViewCount = slotList.stream()
+                .flatMap(slot -> slot.cvInfoList().stream())
+                .mapToLong(CvInfoDto::viewCount)
+                .sum();
+
+        double avgExposureScore = slotList.stream()
+                .flatMap(slot -> slot.cvInfoList().stream())
+                .mapToDouble(CvInfoDto::exposureScore)
+                .average()
+                .orElse(0.0);
+
+        long totalBidMoney = slotList.stream()
+                .mapToLong(slot -> slot.bidMoney() == null ? 0 : slot.bidMoney())
+                .sum();
+
+        List<Double> allMidTimes = slotList.stream()
+                .flatMap(slot -> slot.cvInfoList().stream())
+                .map(CvInfoDto::midTime)
+                .filter(Objects::nonNull)
+                .toList();
         Double overallMidTimeAvg = allMidTimes.isEmpty() ? null :
-                allMidTimes.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+                allMidTimes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
 
-        // 각 Dto에 평균값 세팅(필요하다면 새 리스트로 map)
-        List<AdSlotSummaryResponseDto> resultWithAvg = result.stream()
-                .map(dto -> new AdSlotSummaryResponseDto(
-                        dto.localName(),
-                        dto.bidMoney(),
-                        dto.bidStatus(),
-                        dto.cvInfoList(),
-                        overallMidTimeAvg // 평균값 넣기
-                ))
-                .collect(Collectors.toList());
-
-        return resultWithAvg;
+        return new MyAdDetailResponseDto(
+                slotList,
+                totalViewCount,
+                avgExposureScore,
+                totalBidMoney,
+                overallMidTimeAvg
+        );
     }
-
-
-
 }

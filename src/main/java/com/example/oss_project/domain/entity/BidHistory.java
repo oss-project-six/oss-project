@@ -15,6 +15,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,4 +40,11 @@ public class BidHistory extends BaseEntity {
 
     @Column(name = "bid_status",nullable = false)
     private BidStatus bidStatus;
+
+    @Column(name = "bid_start_time")
+    private LocalDateTime bidStartTime;
+
+    @Column(name = "bid_end_time")
+    private LocalDateTime bidEndTime;
+
 }

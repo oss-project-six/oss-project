@@ -3,10 +3,13 @@ package com.example.oss_project.controller;
 import com.example.oss_project.core.common.CommonResponseDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotSearchRequestDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotBidHistoryResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
 import com.example.oss_project.service.adSlot.AdSlotService;
 import com.example.oss_project.service.adSlot.AdminAdSlotSearchService;
+import com.example.oss_project.service.adSlot.AdSlotBidHistorySearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +25,8 @@ import java.util.List;
 @RequestMapping("/ads/adslot")
 public class AdSlotController {
     private final AdSlotService adSlotService;
-    private final AdminAdSlotSearchService adminAdSlotSearchSevice;
+    private final AdminAdSlotSearchService adminAdSlotSearchService;
+    private final AdSlotBidHistorySearchService adSlotBidHistorySearchService;
     private final S3Util s3Util;
 
     @PostMapping("/regist")
@@ -57,9 +61,14 @@ public class AdSlotController {
     }
 
     @GetMapping("/admin/{adminId}")
-    public CommonResponseDto<List<AdminAdSlotResponseDto>> getAdSlotsByAdmin(
-            @PathVariable Long adminId) {
-        List<AdminAdSlotResponseDto> result = adminAdSlotSearchSevice.getAdSlotsByAdmin(adminId);
-        return CommonResponseDto.ok(result);
+    public CommonResponseDto<AdminAdSlotListResponseDto> getAdSlotsByAdmin(@PathVariable Long adminId) {
+        return CommonResponseDto.ok(adminAdSlotSearchService.getAdSlotsByAdmin(adminId));
+    }
+
+
+    @GetMapping("/{adSlotId}")
+    public CommonResponseDto<AdSlotBidHistoryResponseDto> getAdSlotBidHistory(
+            @PathVariable Long adSlotId) {
+        return CommonResponseDto.ok(adSlotBidHistorySearchService.getAdSlotBidHistory(adSlotId));
     }
 }

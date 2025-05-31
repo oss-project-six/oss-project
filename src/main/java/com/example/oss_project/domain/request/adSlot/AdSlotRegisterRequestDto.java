@@ -5,7 +5,7 @@ import com.example.oss_project.domain.request.minPrice.MinPriceRegisterRequestDt
 import java.util.List;
 
 public record AdSlotRegisterRequestDto(
-        String localName,
+        String slotName,
         String description,
         String imageUrl,
         String address,

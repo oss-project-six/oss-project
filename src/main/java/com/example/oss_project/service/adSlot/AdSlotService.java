@@ -45,7 +45,7 @@ public class AdSlotService {
 
         // 2. 광고 자리 저장
         AdSlot adSlot = AdSlot.builder()
-                .localName(dto.localName())
+                .localName(dto.slotName())
                 .description(dto.description())
                 .imageUrl(imageUrl)
                 .address(dto.address())
