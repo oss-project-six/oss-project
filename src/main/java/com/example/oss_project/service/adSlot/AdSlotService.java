@@ -109,7 +109,7 @@ public class AdSlotService {
                 if (price == null || maxBidHistory.getBidMoney() <= price) {
                     result.add(new AdSlotResponseDto(
                             adSlot.getAdSlotId(),
-                            adSlot.getLocalName(),
+                            adSlot.getSlotName(),
                             adSlot.getAddress(),
                             maxBidHistory.getBidMoney(),
                             maxBidHistory.getBidStatus() != null ? maxBidHistory.getBidStatus().ordinal() : null
