@@ -46,7 +46,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	// Spring Security
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// AWS SDK BOM
 	implementation platform("software.amazon.awssdk:bom:2.25.16")
