@@ -1,5 +1,6 @@
 package com.example.oss_project.service.adSlot;
 
+import com.example.oss_project.core.kakao.KakaoApiUtil;
 import com.example.oss_project.domain.entity.BidHistory;
 import com.example.oss_project.domain.entity.MinPrice;
 import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
@@ -30,13 +31,19 @@ public class AdSlotService {
     private final AdminRepository adminRepository;
     private final BidHistoryJpaRepository bidHistoryRepository;
     private final MinPriceRepository minPriceRepository;
+    private final KakaoApiUtil kakaoApiUtil;
 
     @Transactional
     public void registerAdSlot(AdSlotRegisterRequestDto dto, String imageUrl) {
         Admin admin = adminRepository.findById(dto.adminId())
                 .orElseThrow(() -> new RuntimeException("관리자 없음"));
 
-        // 광고 자리 먼저 저장
+        // 1. 주소 → 위도/경도 변환
+        double[] coords = kakaoApiUtil.getCoordinatesFromAddress(dto.address());
+        Double locX = coords[0];
+        Double locY = coords[1];
+
+        // 2. 광고 자리 저장
         AdSlot adSlot = AdSlot.builder()
                 .localName(dto.localName())
                 .description(dto.description())
@@ -44,7 +51,10 @@ public class AdSlotService {
                 .address(dto.address())
                 .size(dto.size())
                 .admin(admin)
+                .locX(locX) // 경도
+                .locY(locY) // 위도
                 .build();
+
         adSlotRepository.save(adSlot);
 
         // 시간대별 최소가격 저장 (minPriceList가 null이 아닐 때만)
