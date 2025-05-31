@@ -29,6 +29,8 @@ public class AdSlot {
     @OneToMany(mappedBy = "adSlot", cascade = CascadeType.ALL)
     private List<MinPrice> minPrices = new ArrayList<>();
 
+    @Column(name = "ad_slot_name")
+    private String slotName;
 
     @Column(name = "ad_slot_description")
     private String description;

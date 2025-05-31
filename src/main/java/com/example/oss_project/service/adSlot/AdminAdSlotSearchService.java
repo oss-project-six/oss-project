@@ -3,6 +3,7 @@ package com.example.oss_project.service.adSlot;
 import com.example.oss_project.domain.entity.AdSlot;
 import com.example.oss_project.domain.entity.BidHistory;
 import com.example.oss_project.domain.entity.CvInfo;
+import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
 import com.example.oss_project.repository.adSlot.AdslotJpaRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
@@ -21,23 +22,16 @@ public class AdminAdSlotSearchService {
     private final BidHistoryJpaRepository bidHistoryRepository;
     private final CvInfoJpaRepository cvInfoRepository;
 
-    public List<AdminAdSlotResponseDto> getAdSlotsByAdmin(Long adminId) {
-        List<AdSlot> adSlots = adSlotRepository.findByAdmin_AdminId(adminId);
+    public AdminAdSlotListResponseDto getAdSlotsByAdmin(Long adminId) {
+        List<AdSlot> adSlots = adSlotRepository.findByAdmin_AdminIdWithCvInfos(adminId);
 
-        return adSlots.stream().map(adSlot -> {
-            // 최신 입찰 이력
+        List<AdminAdSlotResponseDto> dtoList = adSlots.stream().map(adSlot -> {
             BidHistory bidHistory = bidHistoryRepository.findTopByAdSlotOrderByBidIdDesc(adSlot);
-
-            // CvInfo viewCount (여러 개면 가장 최근, 또는 첫 번째로, 필요에 따라 수정)
-            Long viewCount = 0L;
-            List<CvInfo> cvInfoList = cvInfoRepository.findByAdSlot(adSlot);
-            if (cvInfoList != null && !cvInfoList.isEmpty()) {
-                // 최근 데이터 사용 (예: 첫 번째)
-                viewCount = cvInfoList.get(0).getViewCount();
-            }
-
-            // 해당 광고자리에 대한 전체 입찰 수
+            Long viewCount = adSlot.getCvInfos() != null && !adSlot.getCvInfos().isEmpty()
+                    ? adSlot.getCvInfos().stream().mapToLong(CvInfo::getViewCount).sum()
+                    : 0L;
             int bidCount = bidHistoryRepository.countByAdSlot(adSlot);
+            double competition = Math.round(((double)bidCount / 12) * 100.0) / 100.0; // 경쟁률
 
             return new AdminAdSlotResponseDto(
                     adSlot.getImageUrl(),
@@ -46,9 +40,18 @@ public class AdminAdSlotSearchService {
                     bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                     bidHistory != null ? bidHistory.getBidMoney() : null,
                     viewCount,
-                    bidCount
+                    competition
             );
         }).toList();
+
+        int totalAdSlotCount = dtoList.size();
+        int finishedBidCount = (int) dtoList.stream()
+                .filter(dto -> dto.bidStatus() != null && dto.bidStatus() == 2)
+                .count();
+        long totalViewCount = dtoList.stream().mapToLong(dto -> dto.viewCount() != null ? dto.viewCount() : 0).sum();
+        long totalBidAmount = dtoList.stream().mapToLong(dto -> dto.bid() != null ? dto.bid() : 0).sum();
+
+        return new AdminAdSlotListResponseDto(dtoList, totalAdSlotCount, finishedBidCount, totalViewCount, totalBidAmount);
     }
 
 }

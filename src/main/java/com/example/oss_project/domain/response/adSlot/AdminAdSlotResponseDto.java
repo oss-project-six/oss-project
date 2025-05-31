@@ -4,8 +4,9 @@ public record AdminAdSlotResponseDto(
         String imageUrl,
         String localName,
         String address,
-        Integer bidStatus, // enum을 int로 반환
+        Integer bidStatus,
         Long bid,
-        Long viewCount,    // CvInfo에서 가져온 노출수
-        Integer bidCount   // 해당 광고자리에 대한 전체 입찰 수
+        Long viewCount,
+        Double competition // 추가: 경쟁률(소수점 둘째자리)
 ) {}
+

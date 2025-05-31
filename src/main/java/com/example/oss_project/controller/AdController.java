@@ -4,7 +4,9 @@ import com.example.oss_project.core.common.CommonResponseDto;
 import com.example.oss_project.core.exception.CustomException;
 import com.example.oss_project.core.exception.ErrorCode;
 import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
+import com.example.oss_project.domain.response.ad.MyAdSummaryListResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotSummaryResponseDto;
+import com.example.oss_project.domain.response.adSlot.MyAdDetailResponseDto;
 import com.example.oss_project.service.ad.AdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -46,13 +48,15 @@ public class AdController {
     }
 
     @GetMapping("/my/user/{userId}")
-    public CommonResponseDto<List<com.example.oss_project.domain.response.ad.AdSummaryResponseDto>> getMyAds(@PathVariable Long userId) {
-        return CommonResponseDto.ok(adService.getAdsByUserId(userId));
+    public CommonResponseDto<MyAdSummaryListResponseDto> getMyAds(@PathVariable Long userId) {
+        return CommonResponseDto.ok(adService.getAdsByUserIdWithStats(userId));
     }
 
+
     @GetMapping("/my/ad/{adId}")
-    public CommonResponseDto<List<AdSlotSummaryResponseDto>> getAdSlotsByAd(@PathVariable Long adId) {
-        List<AdSlotSummaryResponseDto> result = adService.getAdSlotsWithBidAndCvInfo(adId);
+    public CommonResponseDto<MyAdDetailResponseDto> getAdSlotsByAd(@PathVariable Long adId) {
+        MyAdDetailResponseDto result = adService.getAdSlotsWithBidAndCvInfo(adId);
         return CommonResponseDto.ok(result);
     }
+
 }
