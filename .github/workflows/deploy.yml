@@ -71,7 +71,6 @@ jobs:
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
         source: |
           env.dev
-          deploy.sh
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
     # 10) 원격 서버에 접속하여 deploy.sh 실행 및 불필요 이미지 제거
