@@ -30,6 +30,9 @@ jobs:
         mkdir -p ./src/main/resources
         echo "${{ secrets.APPLICATION_YML_BASE64 }}" | base64 -d > ./src/main/resources/application.yml
 
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
     # 4) Gradle로 JAR 빌드 (테스트 제외)
     - name: Build with Gradle
       run: ./gradlew clean build -x test
