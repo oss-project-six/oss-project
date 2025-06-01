@@ -35,6 +35,7 @@ dependencies {
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// DB 연결용 MySQL 드라이버
@@ -45,10 +46,10 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// Spring Security
+	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	// AWS SDK BOM
+	//S3
 	implementation platform("software.amazon.awssdk:bom:2.25.16")
 
 	// AWS SDK S3 및 인증 모듈
@@ -74,6 +75,10 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core'
 	testImplementation 'org.mockito:mockito-junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//Pair 사용
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 tasks.named('test') {

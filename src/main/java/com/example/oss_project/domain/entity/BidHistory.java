@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "bidHistory")
+@Table(name = "bid_history")
 public class BidHistory extends BaseEntity {
     @Id
     @Column(name = "bid_id")

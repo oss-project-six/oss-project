@@ -2,10 +2,10 @@ package com.example.oss_project.service.adSlot;
 
 import com.example.oss_project.core.kakao.KakaoApiUtil;
 import com.example.oss_project.domain.entity.BidHistory;
-import com.example.oss_project.domain.entity.MinPrice;
-import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.entity.AdSlot;
 import com.example.oss_project.domain.entity.Admin;
+import com.example.oss_project.domain.entity.MinPrice;
+import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.request.minPrice.MinPriceRegisterRequestDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
 import com.example.oss_project.domain.type.BidStatus;
@@ -109,7 +109,7 @@ public class AdSlotService {
                 if (price == null || maxBidHistory.getBidMoney() <= price) {
                     result.add(new AdSlotResponseDto(
                             adSlot.getAdSlotId(),
-                            adSlot.getSlotName(),
+                            adSlot.getAdSlotName(),
                             adSlot.getAddress(),
                             maxBidHistory.getBidMoney(),
                             maxBidHistory.getBidStatus() != null ? maxBidHistory.getBidStatus().ordinal() : null

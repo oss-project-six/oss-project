@@ -3,9 +3,11 @@ package com.example.oss_project.repository.adSlot;
 import com.example.oss_project.core.exception.CustomException;
 import com.example.oss_project.core.exception.ErrorCode;
 import com.example.oss_project.domain.entity.AdSlot;
+import com.example.oss_project.domain.entity.CvInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,4 +28,6 @@ public class AdSlotRepository {
     public AdSlot save(AdSlot adSlot){
         return adslotJpaRepository.save(adSlot);
     }
+
+
 }
