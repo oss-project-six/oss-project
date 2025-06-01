@@ -47,4 +47,9 @@ jobs:
         script: |
           pkill -f 'java -jar' || true
           cd ${{ secrets.DEPLOY_DIRECTORY }}
+          echo "📦 Deploy directory content:"
+          ls -al
+          echo "🚀 Starting Spring Boot app..."
           nohup java -jar $(ls -t *.jar | head -n 1) > app.log 2>&1 &
+          sleep 3
+          echo "✅ App started. Deployment completed."
