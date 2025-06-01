@@ -38,13 +38,13 @@ jobs:
         source: build/libs/*.jar
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
-    - name: Execute deploy.sh on remote server
-      uses: appleboy/ssh-action@master
+    - name: Copy jar and deploy.sh to remote server
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.DEPLOY_SERVER_IP }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        script: |
-          cd ${{ secrets.DEPLOY_DIRECTORY }}
-          chmod +x deploy.sh
+        source: |
+          ./build/libs/*.jar
           ./deploy.sh
+        target: ${{ secrets.DEPLOY_DIRECTORY }}
