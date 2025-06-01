@@ -38,18 +38,13 @@ jobs:
         source: build/libs/*.jar
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
-    - name: Run jar on remote server
+    - name: Execute deploy.sh on remote server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DEPLOY_SERVER_IP }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
         script: |
-          pkill -f 'java -jar' || true
           cd ${{ secrets.DEPLOY_DIRECTORY }}
-          echo "📦 Deploy directory content:"
-          ls -al
-          echo "🚀 Starting Spring Boot app..."
-          nohup java -jar $(ls -t *.jar | head -n 1) > app.log 2>&1 &
-          sleep 3
-          echo "✅ App started. Deployment completed."
+          chmod +x deploy.sh
+          ./deploy.sh
