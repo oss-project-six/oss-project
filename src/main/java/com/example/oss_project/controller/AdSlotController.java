@@ -3,11 +3,11 @@ package com.example.oss_project.controller;
 import com.example.oss_project.core.common.CommonResponseDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotSearchRequestDto;
-import com.example.oss_project.domain.response.adSlot.AdSlotBidHistoryResponseDto;
-import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
-import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
 import com.example.oss_project.service.adSlot.AdSlotService;
+import com.example.oss_project.service.adSlot.InforAdSlotService;
+import com.example.oss_project.domain.response.adSlot.AdSlotBidHistoryResponseDto;
+import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
 import com.example.oss_project.service.adSlot.AdminAdSlotSearchService;
 import com.example.oss_project.service.adSlot.AdSlotBidHistorySearchService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,7 @@ public class AdSlotController {
     private final AdSlotService adSlotService;
     private final AdminAdSlotSearchService adminAdSlotSearchService;
     private final AdSlotBidHistorySearchService adSlotBidHistorySearchService;
+    private final InforAdSlotService inforAdSlotService;
     private final S3Util s3Util;
 
     @PostMapping("/regist")
@@ -58,6 +59,14 @@ public class AdSlotController {
                 request.price()
         );
         return CommonResponseDto.ok(result);
+    }
+
+    @GetMapping("/infor/{adSlotId}")
+    public CommonResponseDto<?> infoAdSlot(
+            @PathVariable Long adSlotId,
+            @RequestParam(defaultValue = "week") String type  // "week" or "month"
+    ){
+        return CommonResponseDto.ok(inforAdSlotService.findBasicInfor(adSlotId,type));
     }
 
     @GetMapping("/admin/{adminId}")
