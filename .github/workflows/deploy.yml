@@ -18,10 +18,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Create application.yml from secret
+    - name: Create application.yml from base64
       run: |
         mkdir -p src/main/resources
-        printf "%s" "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+        echo "${{ secrets.APPLICATION_YML_BASE64 }}" | base64 -d > src/main/resources/application.yml
 
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
