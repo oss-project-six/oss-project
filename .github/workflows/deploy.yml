@@ -2,7 +2,7 @@ name: Spring Boot Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # 배포 대상 브랜치
 
 jobs:
   deploy:
@@ -29,22 +29,16 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build
 
-    - name: Debug Check if deploy.sh and jar exist
-      run: |
-        echo "📂 현재 디렉토리:" && pwd
-        ls -al
-        echo "📁 build/libs 디렉토리:"
-        ls -al build/libs || echo "❌ build/libs 없음"
+    - name: Ensure deploy files are readable
+      run: chmod +r ./build/libs/*.jar ./deploy.sh
 
     - name: Copy jar and deploy.sh to remote server
-      uses: appleboy/scp-action@master
+      uses: appleboy/scp-action@v0.1.4  # master 대신 안정적인 버전
       with:
         host: ${{ secrets.DEPLOY_SERVER_IP }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        source: |
-          ./build/libs/*.jar
-          ./deploy.sh
+        source: './build/libs/oss-project-0.0.1-SNAPSHOT.jar,./deploy.sh'
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
     - name: Execute deploy.sh on remote server
@@ -54,14 +48,6 @@ jobs:
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
         script: |
-          echo "📁 서버 디렉토리 이동"
           cd ${{ secrets.DEPLOY_DIRECTORY }}
-
-          echo "📄 파일 목록:"
-          ls -al
-
-          echo "🛠️ deploy.sh 권한 설정"
           chmod +x deploy.sh
-
-          echo "🚀 deploy.sh 실행"
           ./deploy.sh
