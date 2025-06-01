@@ -11,6 +11,10 @@ import com.example.oss_project.repository.adSlot.AdSlotRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
 import com.example.oss_project.repository.cvInfo.CvInfoJpaRepository;
 import com.example.oss_project.repository.user.UserRepository;
+import com.example.oss_project.repository.adSlot.AdSlotRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
+import com.example.oss_project.repository.cvInfo.CvInfoRepository;
+import com.example.oss_project.repository.user.UserJpaRepository;
 import com.example.oss_project.domain.request.ad.AdRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -136,7 +140,6 @@ public class AdService {
                         cvInfoDtos = List.of();
                     }
 
-                    // (아래는 기존 코드 그대로)
                     return new AdSlotSummaryResponseDto(
                             adSlot != null ? adSlot.getLocalName() : null,
                             bidHistory.getBidMoney(),

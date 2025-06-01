@@ -26,6 +26,14 @@ public class CvInfo {
 
     @Column(name = "cv_info_mid_time",nullable = false)
     private Double midTime;
+    @Column(name = "cv_info_min_time",nullable = false)
+    private Double minTime;
+    @Column(name = "cv_info_q1_time",nullable = false)
+    private Double q1Time;
+    @Column(name = "cv_info_q3_time",nullable = false)
+    private Double q3Time;
+    @Column(name = "cv_info_max_time",nullable = false)
+    private Double maxTime;
 
     @Column(name = "cv_info_exposure_score",nullable = false)
     private Double exposureScore;
