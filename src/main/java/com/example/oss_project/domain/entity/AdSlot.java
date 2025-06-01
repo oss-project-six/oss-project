@@ -1,5 +1,6 @@
 package com.example.oss_project.domain.entity;
 
+import com.example.oss_project.domain.type.AdSlotStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,9 @@ public class AdSlot {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Admin admin;
+
+    @Column(name = "ad_slot_status")
+    private AdSlotStatus adSlotStatus;
 
     @Column(name = "ad_slot_name")
     private String adSlotName;

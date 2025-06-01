@@ -83,7 +83,8 @@ public class InforAdSlotService {
                 adSlot.getAdSlotName(),
                 makeAvgBidMoney(bidHistories),
                 adSlot.getStartDate(),
-                adSlot.getStartDate().plusDays(1)
+                adSlot.getStartDate().plusDays(1),
+                adSlot.getAdSlotStatus()
         );
 
         AttentionRateResponseDto attentionRateResponseDto = new AttentionRateResponseDto(
