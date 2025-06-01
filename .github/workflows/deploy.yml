@@ -9,32 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 소스코드 체크아웃
     - name: Checkout source code
       uses: actions/checkout@v3
 
-    # 2. Java 17 설치
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # 3. application.yml 복원 (base64 → 원본)
     - name: Create application.yml from base64
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_YML_BASE64 }}" | base64 -d > src/main/resources/application.yml
 
-    # 4. gradlew 실행 권한 부여
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # 5. Gradle 빌드
     - name: Build with Gradle
       run: ./gradlew clean build
 
-    # 6. 빌드 결과물 확인 (디버깅용)
     - name: Check build output
       run: |
         echo "📁 build/libs 디렉토리 내용:"
@@ -42,35 +36,24 @@ jobs:
         echo "📁 현재 디렉토리:"
         ls -al .
 
-    # 7. SSH 키 준비 (CI에서 사용할 개인키 생성)
-    - name: Prepare SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.DEPLOY_SERVER_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+    - name: Copy jar file to remote
+      uses: appleboy/scp-action@master
+      with:
+        username: ${{ secrets.DEPLOY_SERVER_USER }}
+        host: ${{ secrets.DEPLOY_SERVER_IP }}
+        key: ${{ secrets.DEPLOY_SERVER_KEY }}
+        source: "build/libs/oss-project-0.0.1-SNAPSHOT.jar"
+        target: ${{ secrets.DEPLOY_DIRECTORY }}
 
-    # 8. scp로 JAR과 deploy.sh를 서버로 복사
-    - name: Copy jar and deploy.sh via scp
-      run: |
-        # 경로 변수 설정
-        JAR_PATH=build/libs/oss-project-0.0.1-SNAPSHOT.jar
-        SCRIPT_PATH=deploy.sh
-        REMOTE="${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_IP }}:${{ secrets.DEPLOY_DIRECTORY }}"
+    - name: Copy deploy.sh to remote
+      uses: appleboy/scp-action@master
+      with:
+        username: ${{ secrets.DEPLOY_SERVER_USER }}
+        host: ${{ secrets.DEPLOY_SERVER_IP }}
+        key: ${{ secrets.DEPLOY_SERVER_KEY }}
+        source: "deploy.sh"
+        target: ${{ secrets.DEPLOY_DIRECTORY }}
 
-        # 파일이 존재하는지 로컬에서 확인
-        if [ ! -f "$JAR_PATH" ]; then
-          echo "❌ ERROR: JAR 파일이 없습니다: $JAR_PATH"
-          exit 1
-        fi
-        if [ ! -f "$SCRIPT_PATH" ]; then
-          echo "❌ ERROR: deploy.sh 파일이 없습니다: $SCRIPT_PATH"
-          exit 1
-        fi
-
-        # 실제 scp 명령 실행
-        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa "$JAR_PATH" "$SCRIPT_PATH" "$REMOTE"
-
-    # 9. SSH로 서버에 접속하여 deploy.sh 실행
     - name: Execute deploy.sh on remote server
       uses: appleboy/ssh-action@master
       with:
