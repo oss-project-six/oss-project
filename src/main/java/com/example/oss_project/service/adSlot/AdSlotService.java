@@ -49,7 +49,8 @@ public class AdSlotService {
                 .description(dto.description())
                 .imageUrl(imageUrl)
                 .address(dto.address())
-                .size(dto.size())
+                .width(dto.width())
+                .height(dto.height())
                 .admin(admin)
                 .locX(locX) // 경도
                 .locY(locY) // 위도

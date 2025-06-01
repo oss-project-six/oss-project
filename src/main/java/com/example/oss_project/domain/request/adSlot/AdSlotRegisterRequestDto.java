@@ -9,7 +9,8 @@ public record AdSlotRegisterRequestDto(
         String description,
         String imageUrl,
         String address,
-        String size,
+        Long width,
+        Long height,
         Long adminId,
         List<MinPriceRegisterRequestDto> minPriceList // << 추가!
 ) {}

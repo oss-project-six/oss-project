@@ -53,8 +53,11 @@ public class AdSlot {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "size")
-    private String size;
+    @Column(name = "ad_slot_width")
+    private Long width;
+
+    @Column(name = "ad_slot_height")
+    private Long height;
 
     @Column(name = "ad_loc_x")
     private Double locX;
