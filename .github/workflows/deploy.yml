@@ -82,6 +82,6 @@ jobs:
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
         script: |
           cd ${{ secrets.DEPLOY_DIRECTORY }}
-          chmod +x deploy.sh
-          ./deploy.sh
-          docker image prune -f
+          docker compose pull         # 최신 spring-app 이미지 받기
+          docker compose up -d        # 컨테이너 재시작
+          docker image prune -f       # 안 쓰는 이미지 정리(선택)
