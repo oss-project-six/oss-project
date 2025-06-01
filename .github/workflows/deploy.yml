@@ -38,7 +38,9 @@ jobs:
         host: ${{ secrets.DEPLOY_SERVER_IP }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        source: './build/libs/oss-project-0.0.1-SNAPSHOT.jar,./deploy.sh'
+        source: |
+          ./build/libs/oss-project-0.0.1-SNAPSHOT.jar
+          ./deploy.sh
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
     - name: Execute deploy.sh on remote server
