@@ -1,60 +1,78 @@
-name: Spring Boot Deploy
+# .github/workflows/deploy.yml
+name: 🚀 Spring Boot Docker CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # main 브랜치에 푸시될 때마다 실행
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout source code
-      uses: actions/checkout@v3
+    env:
+      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/spring-app
 
+    steps:
+    # 1) 코드 체크아웃
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2) JDK 17 설치 (Gradle 빌드용)
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Create application.yml from base64
+    # 3) application.yml 생성 (base64 → 원본)
+    - name: Create application.yml from Secrets
       run: |
-        mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_YML_BASE64 }}" | base64 -d > src/main/resources/application.yml
+        mkdir -p ./src/main/resources
+        echo "${{ secrets.APPLICATION_YML_BASE64 }}" | base64 -d > ./src/main/resources/application.yml
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
+    # 4) Gradle로 JAR 빌드 (테스트 제외)
     - name: Build with Gradle
-      run: ./gradlew clean build
+      run: ./gradlew clean build -x test
 
-    - name: Check build output
+    # 5) Docker Hub 로그인
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # 6) Docker 이미지 빌드 및 태그
+    - name: Build Docker image
       run: |
-        echo "📁 build/libs 디렉토리 내용:"
-        ls -al build/libs/
-        echo "📁 현재 디렉토리:"
-        ls -al .
+        IMAGE_TAG="${IMAGE_NAME}:${{ github.sha }}"
+        docker build -t $IMAGE_TAG .
+        docker tag $IMAGE_TAG $IMAGE_NAME:latest
 
-    - name: Copy jar file to remote
+    # 7) Docker 이미지 푸시 (SHA 태그 + latest 태그)
+    - name: Push Docker images
+      run: |
+        IMAGE_TAG="${IMAGE_NAME}:${{ github.sha }}"
+        docker push $IMAGE_TAG
+        docker push $IMAGE_NAME:latest
+
+    # 8) .env 파일 생성 (TAG 정보 저장)
+    - name: Create env.dev with TAG
+      run: echo "TAG=${{ github.sha }}" > env.dev
+
+    # 9) env.dev 파일을 원격 서버로 복사
+    - name: Send env.dev and deploy.sh to remote
       uses: appleboy/scp-action@master
       with:
-        username: ${{ secrets.DEPLOY_SERVER_USER }}
         host: ${{ secrets.DEPLOY_SERVER_IP }}
+        username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        source: "build/libs/oss-project-0.0.1-SNAPSHOT.jar"
+        source: |
+          env.dev
+          deploy.sh
         target: ${{ secrets.DEPLOY_DIRECTORY }}
 
-    - name: Copy deploy.sh to remote
-      uses: appleboy/scp-action@master
-      with:
-        username: ${{ secrets.DEPLOY_SERVER_USER }}
-        host: ${{ secrets.DEPLOY_SERVER_IP }}
-        key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        source: "deploy.sh"
-        target: ${{ secrets.DEPLOY_DIRECTORY }}
-
-    - name: Execute deploy.sh on remote server
+    # 10) 원격 서버에 접속하여 deploy.sh 실행 및 불필요 이미지 제거
+    - name: Remote deploy to server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DEPLOY_SERVER_IP }}
@@ -64,3 +82,4 @@ jobs:
           cd ${{ secrets.DEPLOY_DIRECTORY }}
           chmod +x deploy.sh
           ./deploy.sh
+          docker image prune -f
