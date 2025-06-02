@@ -44,9 +44,6 @@ public class AdSlot {
     @Column(name = "ad_slot_description")
     private String description;
 
-    @Column(name = "ad_local_name", nullable = false)
-    private String localName;
-
     @Column(name = "ad_image_url")
     private String imageUrl;
 

@@ -48,7 +48,7 @@ public class AdSlotBidHistorySearchService {
 
         // 5. 총 매출 = "입찰 종료" 상태인 것의 낙찰가 합
         long totalRevenue = histories.stream()
-                .filter(bh -> bh.getBidStatus() == BidStatus.CLOSED)
+                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS || bh.getBidStatus() == BidStatus.FAIL)
                 .mapToLong(BidHistory::getBidMoney)
                 .sum();
 
@@ -57,7 +57,7 @@ public class AdSlotBidHistorySearchService {
 
         // 7. 총 게재시간 = '입찰 종료'인 것의 개수 * 2
         int totalExposureHour = (int) (histories.stream()
-                .filter(bh -> bh.getBidStatus() == BidStatus.CLOSED)
+                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS || bh.getBidStatus() == BidStatus.FAIL)
                 .count() * 2);
 
         return new AdSlotBidHistoryResponseDto(

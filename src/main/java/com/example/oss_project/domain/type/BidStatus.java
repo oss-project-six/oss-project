@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 public enum BidStatus {
     BEFORE_BIDDING("입찰 전"),
     BIDDING("입찰 중"),
-    CLOSED("입찰 종료");
+    SUCCESS("입찰 성공"),
+    FAIL("입찰 실패");
 
     private final String bidStatus;
 }

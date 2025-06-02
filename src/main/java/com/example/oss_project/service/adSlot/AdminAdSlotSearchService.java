@@ -35,7 +35,7 @@ public class AdminAdSlotSearchService {
 
             return new AdminAdSlotResponseDto(
                     adSlot.getImageUrl(),
-                    adSlot.getLocalName(),
+                    adSlot.getAdSlotName(),
                     adSlot.getAddress(),
                     bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                     bidHistory != null ? bidHistory.getBidMoney() : null,

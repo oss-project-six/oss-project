@@ -45,7 +45,7 @@ public class AdSlotService {
 
         // 2. 광고 자리 저장
         AdSlot adSlot = AdSlot.builder()
-                .localName(dto.slotName())
+                .adSlotName(dto.slotName())
                 .description(dto.description())
                 .imageUrl(imageUrl)
                 .address(dto.address())
@@ -87,7 +87,8 @@ public class AdSlotService {
             switch (bidStatusStr) {
                 case "입찰 전": bidStatusFinal = BidStatus.BEFORE_BIDDING; break;
                 case "입찰 중": bidStatusFinal = BidStatus.BIDDING; break;
-                case "입찰 종료": bidStatusFinal = BidStatus.CLOSED; break;
+                case "입찰 성공": bidStatusFinal = BidStatus.SUCCESS; break;
+                case "입찰 실패": bidStatusFinal = BidStatus.FAIL; break;
                 default: bidStatusFinal = null;
             }
         } else {
@@ -115,6 +116,21 @@ public class AdSlotService {
                             maxBidHistory.getBidMoney(),
                             maxBidHistory.getBidStatus() != null ? maxBidHistory.getBidStatus().ordinal() : null
                     ));
+                }
+            } else {
+                // 입찰 이력 없음 → 시간대별 최소가격 제공
+                Optional<Long> minPriceOpt = minPriceRepository.findMinPriceByAdSlot(adSlot);
+                if (minPriceOpt.isPresent()) {
+                    Long minPrice = minPriceOpt.get();
+                    if (price == null || minPrice <= price) {
+                        result.add(new AdSlotResponseDto(
+                                adSlot.getAdSlotId(),
+                                adSlot.getAdSlotName(),
+                                adSlot.getAddress(),
+                                minPrice, // 입찰 없으면 최저가
+                                null      // 입찰 상태 없음
+                        ));
+                    }
                 }
             }
         }

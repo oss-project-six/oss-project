@@ -123,7 +123,7 @@ public class AdService {
                 .map(bidHistory -> {
                     AdSlot adSlot = bidHistory.getAdSlot();
 
-                    // ✅ "bid_end_time"과 "cv_info_time_stamp"가 완전히 같은 CvInfo만 반환
+                    // "bid_end_time"과 "cv_info_time_stamp"가 완전히 같은 CvInfo만 반환
                     List<CvInfoDto> cvInfoDtos;
                     if (adSlot != null && bidHistory.getBidEndTime() != null) {
                         Optional<CvInfo> cvInfoOpt = cvInfoRepository.findByAdSlotAndTimeStamp(
@@ -141,7 +141,7 @@ public class AdService {
                     }
 
                     return new AdSlotSummaryResponseDto(
-                            adSlot != null ? adSlot.getLocalName() : null,
+                            adSlot != null ? adSlot.getAdSlotName() : null,
                             bidHistory.getBidMoney(),
                             bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                             cvInfoDtos
@@ -149,7 +149,7 @@ public class AdService {
                 })
                 .toList();
 
-        // --- 집계 필드 계산 (cvInfoList가 여러개가 아니라면 거의 1개씩임) ---
+        // 집계 필드 계산
         long totalViewCount = slotList.stream()
                 .flatMap(slot -> slot.cvInfoList().stream())
                 .mapToLong(CvInfoDto::viewCount)

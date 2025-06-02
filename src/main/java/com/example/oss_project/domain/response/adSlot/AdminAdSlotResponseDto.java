@@ -2,7 +2,7 @@ package com.example.oss_project.domain.response.adSlot;
 
 public record AdminAdSlotResponseDto(
         String imageUrl,
-        String localName,
+        String adSlotName,
         String address,
         Integer bidStatus,
         Long bid,
