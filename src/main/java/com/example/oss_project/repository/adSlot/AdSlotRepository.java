@@ -29,5 +29,7 @@ public class AdSlotRepository {
         return adslotJpaRepository.save(adSlot);
     }
 
-
+    public List<AdSlot> findByAdmin_AdminIdWithCvInfos(Long adminId){
+        return adslotJpaRepository.findByAdmin_AdminIdWithCvInfos(adminId);
+    }
 }
