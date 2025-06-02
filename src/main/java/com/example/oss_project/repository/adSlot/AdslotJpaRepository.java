@@ -17,6 +17,4 @@ public interface AdslotJpaRepository extends JpaRepository<AdSlot,Long> {
 
     @Query("SELECT a FROM AdSlot a LEFT JOIN FETCH a.cvInfos WHERE a.admin.adminId = :adminId")
     List<AdSlot> findByAdmin_AdminIdWithCvInfos(@Param("adminId") Long adminId);
-
-
 }
