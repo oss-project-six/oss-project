@@ -26,13 +26,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestURI = httpRequest.getRequestURI();
 
-        // 로그인/회원가입 경로는 필터를 타지 않고 바로 통과
         if (requestURI.startsWith("/login")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // JWT 토큰 검사
         String token = resolveToken(httpRequest);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);

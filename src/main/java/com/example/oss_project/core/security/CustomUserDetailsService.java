@@ -5,10 +5,13 @@ import com.example.oss_project.domain.entity.Admin;
 import com.example.oss_project.domain.entity.User;
 import com.example.oss_project.repository.auth.AuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,31 +20,25 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AuthRepository authRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userLoginId) throws UsernameNotFoundException {
-//        User user = authRepository.findByUserLoginId(userLoginId);
-//
-//        return org.springframework.security.core.userdetails.User.builder()
-//                .username(user.getUserLoginId())
-//                .password(user.getPassword()) // 암호화된 비밀번호
-//                .roles("USER") // 권한 설정
-//                .build();
-
-        // user 테이블 먼저 조회
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         try {
-            User user = authRepository.findByUserLoginId(userLoginId);
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUserLoginId())
-                    .password(user.getPassword())
-                    .roles("USER")
-                    .build();
+            User user = authRepository.findByUserLoginId(userId);
+            return new CustomUserDetails(
+                    user.getUserId(),                    // ✅ getUserId() 직접 저장
+                    user.getUserLoginId(),
+                    user.getPassword(),
+                    List.of(new SimpleGrantedAuthority("USER"))
+            );
         } catch (CustomException e) {
-            // admin 테이블에서 조회
-            Admin admin = authRepository.findByAdminLoginId(userLoginId);
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(admin.getAdminLoginId())
-                    .password(admin.getPassword())
-                    .roles("ADMIN")
-                    .build();
+            Admin admin = authRepository.findByAdminLoginId(userId);
+            return new CustomUserDetails(
+                    admin.getAdminId(),
+                    admin.getAdminLoginId(),
+                    admin.getPassword(),
+                    List.of(new SimpleGrantedAuthority("ADMIN"))
+            );
         }
     }
+
+
 }
