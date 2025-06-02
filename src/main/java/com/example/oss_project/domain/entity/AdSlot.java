@@ -26,6 +26,7 @@ public class AdSlot {
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "ad_slot_status")
     private AdSlotStatus adSlotStatus;
 

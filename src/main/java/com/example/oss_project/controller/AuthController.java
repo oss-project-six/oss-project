@@ -26,9 +26,15 @@ public class AuthController {
     @GetMapping("")
     public CommonResponseDto<?> userLogin(
             @RequestBody LoginRequestDto loginRequestDto
-    ){
-        return CommonResponseDto.ok(loginService.login(loginRequestDto));
+    ) {
+        try {
+            return CommonResponseDto.ok(loginService.login(loginRequestDto));
+        } catch (Exception e) {
+            // 예외 처리 로직 작성 (예: 에러 응답 반환)
+            return CommonResponseDto.fail(new CustomException(ErrorCode.NOT_FOUND_USER));
+        }
     }
+
 
     @PostMapping("/signup")
     public CommonResponseDto<?> userSignUp(
