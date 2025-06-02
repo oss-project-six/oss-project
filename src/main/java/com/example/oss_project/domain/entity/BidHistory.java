@@ -4,6 +4,8 @@ import com.example.oss_project.domain.type.BidStatus;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +23,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder(builderMethodName = "bidBuilder")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "bid_history")
 public class BidHistory extends BaseEntity {
@@ -38,6 +44,7 @@ public class BidHistory extends BaseEntity {
     @Column(name = "bid_money",nullable = false)
     private Long bidMoney;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "bid_status",nullable = false)
     private BidStatus bidStatus;
 
@@ -46,5 +53,4 @@ public class BidHistory extends BaseEntity {
 
     @Column(name = "bid_end_time")
     private LocalDateTime bidEndTime;
-
 }

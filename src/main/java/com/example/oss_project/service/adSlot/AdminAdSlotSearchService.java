@@ -5,9 +5,12 @@ import com.example.oss_project.domain.entity.BidHistory;
 import com.example.oss_project.domain.entity.CvInfo;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotResponseDto;
+import com.example.oss_project.repository.adSlot.AdSlotRepository;
 import com.example.oss_project.repository.adSlot.AdslotJpaRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
+import com.example.oss_project.repository.bidHistory.BidHistoryRepository;
 import com.example.oss_project.repository.cvInfo.CvInfoJpaRepository;
+import com.example.oss_project.repository.cvInfo.CvInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminAdSlotSearchService {
 
-    private final AdslotJpaRepository adSlotRepository;
-    private final BidHistoryJpaRepository bidHistoryRepository;
-    private final CvInfoJpaRepository cvInfoRepository;
+    private final AdSlotRepository adSlotRepository;
+    private final BidHistoryRepository bidHistoryRepository;
+    private final CvInfoRepository cvInfoRepository;
 
     public AdminAdSlotListResponseDto getAdSlotsByAdmin(Long adminId) {
         List<AdSlot> adSlots = adSlotRepository.findByAdmin_AdminIdWithCvInfos(adminId);

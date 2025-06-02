@@ -62,6 +62,8 @@ public enum ErrorCode {
     NOT_FOUND_ADSLOT("40403", HttpStatus.NOT_FOUND, "해당 광고 자리가 존재하지 않습니다."),
     NOT_FOUND_ADMIN("40404", HttpStatus.NOT_FOUND, "해당 매체사가 존재하지 않습니다."),
     NOT_FOUND_CVINFO("40405", HttpStatus.NOT_FOUND, "해당 광고 정보가 존재하지 않습니다."),
+    NOT_FOUND_BIDHISTORY("40406", HttpStatus.NOT_FOUND, "해당 입찰 정보가 존재하지 않습니다."),
+
 
 
     /**

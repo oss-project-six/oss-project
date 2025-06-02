@@ -21,9 +21,11 @@ public class CvInfo {
     @JoinColumn(name = "ad_slot_id")
     private AdSlot adSlot;
 
+    // 몇시 데이터인지
     @Column(name = "cv_info_time_stamp",nullable = false)
     private LocalDateTime timeStamp;
 
+    // 체류시간 상자그림
     @Column(name = "cv_info_mid_time",nullable = false)
     private Double midTime;
     @Column(name = "cv_info_min_time",nullable = false)
@@ -35,12 +37,15 @@ public class CvInfo {
     @Column(name = "cv_info_max_time",nullable = false)
     private Double maxTime;
 
+    //노출점수
     @Column(name = "cv_info_exposure_score",nullable = false)
     private Double exposureScore;
 
+    //응시율
     @Column(name = "cv_info_attention_ration",nullable = false)
     private Double attentionRatio;
 
+    //통행량
     @Column(name = "cv_info_view_count",nullable = false)
     private Long viewCount;
 }
