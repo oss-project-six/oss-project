@@ -8,6 +8,7 @@ import com.example.oss_project.domain.request.auth.LoginRequestDto;
 import com.example.oss_project.domain.type.AuthStatus;
 import com.example.oss_project.repository.auth.AuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,21 +25,14 @@ public class LoginService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final CustomUserDetailsService customUserDetailsService;
-    private final CustomAdminDetailsService customAdminDetailsService;
+    private final AuthenticationManager authenticationManager;
 
     public JwtTokenDto login(LoginRequestDto loginRequestDto){
-        UserDetails userDetails;
-
-        if (loginRequestDto.authStatus() == AuthStatus.ADMIN) {
-            userDetails = customAdminDetailsService.loadUserByUsername(loginRequestDto.loginId());
-        } else {
-            userDetails = customUserDetailsService.loadUserByUsername(loginRequestDto.loginId());
-        }
 
         UsernamePasswordAuthenticationToken authenticationToken = new
                 UsernamePasswordAuthenticationToken(loginRequestDto.loginId(), loginRequestDto.password());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
         JwtTokenDto jwtToken = jwtTokenProvider.generateToken(authentication);
 
