@@ -3,13 +3,11 @@ package com.example.oss_project.controller;
 import com.example.oss_project.core.common.CommonResponseDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotSearchRequestDto;
+import com.example.oss_project.domain.response.adSlot.AdSlotChangeStatusRequestDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotResponseDto;
-import com.example.oss_project.service.adSlot.AdSlotService;
-import com.example.oss_project.service.adSlot.InforAdSlotService;
+import com.example.oss_project.service.adSlot.*;
 import com.example.oss_project.domain.response.adSlot.AdSlotBidHistoryResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
-import com.example.oss_project.service.adSlot.AdminAdSlotSearchService;
-import com.example.oss_project.service.adSlot.AdSlotBidHistorySearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +25,7 @@ public class AdSlotController {
     private final AdSlotService adSlotService;
     private final AdminAdSlotSearchService adminAdSlotSearchService;
     private final AdSlotBidHistorySearchService adSlotBidHistorySearchService;
+    private final ChangeAdSlotStatus changeAdSlotStatus;
     private final InforAdSlotService inforAdSlotService;
     private final S3Util s3Util;
 
@@ -79,5 +78,13 @@ public class AdSlotController {
     public CommonResponseDto<AdSlotBidHistoryResponseDto> getAdSlotBidHistory(
             @PathVariable Long adSlotId) {
         return CommonResponseDto.ok(adSlotBidHistorySearchService.getAdSlotBidHistory(adSlotId));
+    }
+
+    @PostMapping("/change")
+    public CommonResponseDto<String> changeAdSlotStatus(
+            @RequestBody AdSlotChangeStatusRequestDto request
+    ) {
+        changeAdSlotStatus.changeStatusToContinue(request.adSlotId());
+        return CommonResponseDto.ok("성공.");
     }
 }
