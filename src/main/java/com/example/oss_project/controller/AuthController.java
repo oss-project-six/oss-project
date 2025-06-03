@@ -23,7 +23,7 @@ public class AuthController {
     private final LoginService loginService;
     private final SignUpService signUpService;
 
-    @GetMapping("")
+    @PostMapping("")
     public CommonResponseDto<?> userLogin(
             @RequestBody LoginRequestDto loginRequestDto
     ) {
