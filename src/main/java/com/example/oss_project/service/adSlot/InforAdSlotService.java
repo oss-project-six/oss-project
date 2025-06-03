@@ -77,8 +77,6 @@ public class InforAdSlotService {
         Pair<List<Double>, Double> attentionResult = makeTimeAttentionRatioWithAverage(dayInfos, dayRange.getLeft().toLocalDate());
         Pair<List<CvInfoStayTimeDto>,Double> stayTimeDtos = makeTimeStayWithAverage(dayInfos, dayRange.getLeft().toLocalDate());
 
-
-
         NavigateResponseDto navigateResponseDto = new NavigateResponseDto(
                 adSlot.getAdSlotName(),
                 makeAvgBidMoney(bidHistories),
@@ -107,6 +105,7 @@ public class InforAdSlotService {
         );
 
         return new AdslotInforAdResponseDto(
+                latest.getTimeStamp(),
                 navigateResponseDto,
                 exposureScoreResponseDto,
                 attentionRateResponseDto,
