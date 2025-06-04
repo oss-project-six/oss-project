@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AdSlotStatus {
     BEFORE_BIDDING("입찰 전"),
-    CONTINUE("진행중"),
-    FINISH("입찰 완료");
+    BID_CONTINUE(" 입찰 진행중"),
+    AD_CONTINUE("광고 게재중");
 
     private final String adSlotStatus;
 }
