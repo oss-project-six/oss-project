@@ -1,6 +1,7 @@
 package com.example.oss_project.controller;
 
 import com.example.oss_project.core.common.CommonResponseDto;
+import com.example.oss_project.core.security.CustomUserDetails;
 import com.example.oss_project.domain.request.adSlot.AdSlotRegisterRequestDto;
 import com.example.oss_project.domain.request.adSlot.AdSlotSearchRequestDto;
 import com.example.oss_project.domain.response.adSlot.AdSlotChangeStatusRequestDto;
@@ -9,6 +10,8 @@ import com.example.oss_project.service.adSlot.*;
 import com.example.oss_project.domain.response.adSlot.AdSlotBidHistoryResponseDto;
 import com.example.oss_project.domain.response.adSlot.AdminAdSlotListResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -83,7 +86,7 @@ public class AdSlotController {
     @PostMapping("/change")
     public CommonResponseDto<String> changeAdSlotStatus(
             @RequestBody AdSlotChangeStatusRequestDto request
-    ) {
+            ) {
         changeAdSlotStatus.changeStatusToContinue(request.adSlotId());
         return CommonResponseDto.ok("성공.");
     }
