@@ -6,6 +6,7 @@ import com.example.oss_project.domain.response.adSlot.AdSlotSummaryResponseDto;
 import com.example.oss_project.domain.entity.*;
 import com.example.oss_project.domain.response.adSlot.CvInfoDto;
 import com.example.oss_project.domain.response.adSlot.MyAdDetailResponseDto;
+import com.example.oss_project.domain.type.BidStatus;
 import com.example.oss_project.repository.ad.AdRepository;
 import com.example.oss_project.repository.adSlot.AdSlotRepository;
 import com.example.oss_project.repository.bidHistory.BidHistoryJpaRepository;
@@ -67,12 +68,12 @@ public class AdService {
             BidHistory bidHistory = bidHistoryRepository.findTopByAdOrderByBidIdDesc(ad);
 
             Integer bidStatusOrdinal = (bidHistory != null && bidHistory.getBidStatus() != null)
-                    ? bidHistory.getBidStatus().ordinal() : null;
-            Long bidMoney = (bidHistory != null) ? bidHistory.getBidMoney() : null;
+                    ? bidHistory.getBidStatus().ordinal() : BidStatus.BEFORE_BIDDING.ordinal();
+            Long bidMoney = (bidHistory != null) ? bidHistory.getBidMoney() : 0;
 
             // cv_info를 입찰 시간대 기준으로 찾아야 할 경우: 예시 코드
-            Double exposureScore = null;
-            Long viewCount = null;
+            Double exposureScore = 0.;
+            Long viewCount = 0L;
 
             if (bidHistory != null && bidHistory.getAdSlot() != null && bidHistory.getBidStartTime() != null) {
                 List<CvInfo> cvInfos = cvInfoRepository.findByAdSlot(bidHistory.getAdSlot());
