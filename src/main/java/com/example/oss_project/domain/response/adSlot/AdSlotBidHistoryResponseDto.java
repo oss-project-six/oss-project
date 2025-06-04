@@ -9,5 +9,5 @@ public record AdSlotBidHistoryResponseDto(
         Long totalRevenue,                   // 총 매출
         Double avgBidCount,                  // 평균 입찰 수
         Integer totalExposureHour,           // 총 게재시간(시간 단위)
-        Double exposureScore                 // 노출도
+        Double avgExposureScore                 // 평균 노출 시간
 ) {}

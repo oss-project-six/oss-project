@@ -141,9 +141,12 @@ public class AdService {
                     }
 
                     return new AdSlotSummaryResponseDto(
+                            adSlot != null ? adSlot.getAdSlotId() :null,
                             adSlot != null ? adSlot.getAdSlotName() : null,
                             bidHistory.getBidMoney(),
                             bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
+                            bidHistory.getBidStartTime(),
+                            bidHistory.getBidEndTime(),
                             cvInfoDtos
                     );
                 })

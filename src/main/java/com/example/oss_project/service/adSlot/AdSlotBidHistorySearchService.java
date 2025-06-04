@@ -32,7 +32,7 @@ public class AdSlotBidHistorySearchService {
 
         // 3. 노출 점수
         List<CvInfo> cvInfos = cvInfoRepository.findByAdSlot(adSlot);
-        Double exposureScore = cvInfos.isEmpty() ? null :
+        Double avgExposureScore = cvInfos.isEmpty() ? null :
                 cvInfos.stream().mapToDouble(CvInfo::getExposureScore).average().orElse(0.0);
 
         // 4. 입찰 DTO 변환
@@ -48,7 +48,7 @@ public class AdSlotBidHistorySearchService {
 
         // 5. 총 매출 = "입찰 종료" 상태인 것의 낙찰가 합
         long totalRevenue = histories.stream()
-                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS || bh.getBidStatus() == BidStatus.FAIL)
+                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS) // 기존에 BifStatus.FAIL 뺌
                 .mapToLong(BidHistory::getBidMoney)
                 .sum();
 
@@ -57,7 +57,7 @@ public class AdSlotBidHistorySearchService {
 
         // 7. 총 게재시간 = '입찰 종료'인 것의 개수 * 2
         int totalExposureHour = (int) (histories.stream()
-                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS || bh.getBidStatus() == BidStatus.FAIL)
+                .filter(bh -> bh.getBidStatus() == BidStatus.SUCCESS) // 기존에 BidStatus.FAIL 뺌
                 .count() * 2);
 
         return new AdSlotBidHistoryResponseDto(
@@ -65,7 +65,7 @@ public class AdSlotBidHistorySearchService {
                 totalRevenue,
                 avgBidCount,
                 totalExposureHour,
-                exposureScore
+                avgExposureScore
         );
     }
 }
