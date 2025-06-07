@@ -19,6 +19,7 @@ public interface BidHistoryJpaRepository extends JpaRepository<BidHistory, Long>
     List<BidHistory> findByAdSlot(AdSlot adSlot);
     Optional<BidHistory> findTopByAdSlotOrderByBidIdDesc(AdSlot adSlot); // 가장 최신 입찰가
     int countByAdSlot(AdSlot adSlot);
+    List<BidHistory> findByAd(Ad ad);
     @Query("SELECT bh FROM BidHistory bh JOIN FETCH bh.ad WHERE bh.adSlot = :adSlot")
     List<BidHistory> findByAdSlotWithAd(@Param("adSlot") AdSlot adSlot);
 
