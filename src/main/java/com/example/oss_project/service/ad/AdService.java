@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,6 @@ public class AdService {
         adRepository.save(ad);
     }
 
-
     // 광고주가 등록한 광고 리스트 반환
     public MyAdSummaryListResponseDto getAdsByUserIdWithStats(Long userId) {
         List<Ad> ads = adRepository.findByUser_UserId(userId);
@@ -65,14 +65,20 @@ public class AdService {
         AtomicLong totalBidMoney = new AtomicLong(0);
 
         List<AdSummaryResponseDto> adSummaries = ads.stream().map(ad -> {
-            BidHistory bidHistory = bidHistoryRepository.findTopByAdOrderByBidIdDesc(ad);
+            // 현재 시각에 해당하는 입찰 기록 조회
+            LocalDateTime now = LocalDateTime.now();
+            List<BidHistory> histories = bidHistoryRepository.findByAd(ad);
+            BidHistory bidHistory = histories.stream()
+                    .filter(bh -> !bh.getBidStartTime().isAfter(now) && bh.getBidEndTime().isAfter(now))
+                    .findFirst()
+                    .orElse(null);
 
             Integer bidStatusOrdinal = (bidHistory != null && bidHistory.getBidStatus() != null)
                     ? bidHistory.getBidStatus().ordinal() : BidStatus.BEFORE_BIDDING.ordinal();
             Long bidMoney = (bidHistory != null) ? bidHistory.getBidMoney() : 0;
 
-            // cv_info를 입찰 시간대 기준으로 찾아야 할 경우: 예시 코드
-            Double exposureScore = 0.;
+            // cv_info를 입찰 시간대 기준으로 찾아야 할 경우
+            Double exposureScore = 0.0;
             Long viewCount = 0L;
 
             if (bidHistory != null && bidHistory.getAdSlot() != null && bidHistory.getBidStartTime() != null) {
@@ -89,7 +95,7 @@ public class AdService {
             }
 
             // 입찰 완료 광고 수 카운트 (예: BidStatus가 "입찰 완료" = 1)
-            if (bidStatusOrdinal != null && bidStatusOrdinal == 1) {
+            if (bidStatusOrdinal == 1) {
                 completedBidAdCount.incrementAndGet();
                 if (bidMoney != null) {
                     totalBidMoney.addAndGet(bidMoney);
@@ -114,6 +120,7 @@ public class AdService {
                 totalBidMoney.get()
         );
     }
+
 
     // 광고 하나에 대한 광고자리 + 입찰/노출 정보 반환
     @Transactional(readOnly = true)
