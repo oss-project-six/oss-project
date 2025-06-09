@@ -46,9 +46,10 @@ public class BidHistory extends BaseEntity {
     @Column(name = "bid_money",nullable = false)
     private Long bidMoney;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "bid_status",nullable = false)
-    private BidStatus bidStatus;
+    private BidStatus bidStatus = BidStatus.BEFORE_BIDDING;
 
     @Column(name = "bid_start_time")
     private LocalDateTime bidStartTime;
