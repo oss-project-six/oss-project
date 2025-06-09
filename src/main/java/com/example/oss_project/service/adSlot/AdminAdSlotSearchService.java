@@ -39,6 +39,7 @@ public class AdminAdSlotSearchService {
             return new AdminAdSlotResponseDto(
                     adSlot.getImageUrl(),
                     adSlot.getAdSlotName(),
+                    adSlot.getAdSlotId(),
                     adSlot.getAddress(),
                     bidHistory != null && bidHistory.getBidStatus() != null ? bidHistory.getBidStatus().ordinal() : null,
                     bidHistory != null ? bidHistory.getBidMoney() : null,
@@ -54,7 +55,7 @@ public class AdminAdSlotSearchService {
         long totalViewCount = dtoList.stream().mapToLong(dto -> dto.viewCount() != null ? dto.viewCount() : 0).sum();
         long totalBidAmount = dtoList.stream().mapToLong(dto -> dto.bid() != null ? dto.bid() : 0).sum();
 
-        return new AdminAdSlotListResponseDto(dtoList, totalAdSlotCount, finishedBidCount, totalViewCount, totalBidAmount);
+        return new AdminAdSlotListResponseDto(dtoList, totalAdSlotCount, adminId, finishedBidCount, totalViewCount, totalBidAmount);
     }
 
 }

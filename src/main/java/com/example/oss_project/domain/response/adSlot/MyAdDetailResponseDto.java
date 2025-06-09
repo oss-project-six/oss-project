@@ -4,6 +4,7 @@ import java.util.List;
 
 public record MyAdDetailResponseDto(
         List<AdSlotSummaryResponseDto> slotList,
+        Long adId,
         Long totalViewCount,
         Double avgExposureScore,
         Long totalBidMoney,
