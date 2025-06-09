@@ -16,6 +16,7 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:5173")
                         .allowedOrigins("https://ossp6-front.vercel.app")
+                        .allowedOrigins("https://ossp6-front-4796s-projects.vercel.app")
                         .allowedMethods("*");
             }
         };
