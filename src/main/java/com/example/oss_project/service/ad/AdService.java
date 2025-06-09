@@ -186,6 +186,7 @@ public class AdService {
 
         return new MyAdDetailResponseDto(
                 slotList,
+                adId,
                 totalViewCount,
                 avgExposureScore,
                 totalBidMoney,
