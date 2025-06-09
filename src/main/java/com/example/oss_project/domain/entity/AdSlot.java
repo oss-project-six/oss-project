@@ -28,9 +28,10 @@ public class AdSlot {
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "ad_slot_status")
-    private AdSlotStatus adSlotStatus;
+    private AdSlotStatus adSlotStatus = AdSlotStatus.BEFORE_BIDDING;
 
     @Column(name = "ad_slot_name")
     private String adSlotName;
