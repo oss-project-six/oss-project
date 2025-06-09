@@ -14,9 +14,11 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
-                        .allowedOrigins("https://ossp6-front.vercel.app")
-                        .allowedOrigins("https://ossp6-front-git-main-4796s-projects.vercel.app")
+                        .allowedOrigins("http://localhost:5173",
+                                "https://ossp6-front.vercel.app",
+                                "https://ossp6-front-4796s-projects.vercel.app",
+                                "https://ossp6-front-git-main-4796s-projects.vercel.app"
+                        )
                         .allowedMethods("*");
             }
         };
