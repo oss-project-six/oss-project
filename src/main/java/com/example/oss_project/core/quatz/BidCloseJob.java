@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class BidCloseJob implements Job {
-
     public BidCloseJob(){
     }
 
@@ -110,7 +109,7 @@ public class BidCloseJob implements Job {
 
             Trigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity("adSlotCloseTrigger_" + adSlotId)
-                    .startAt(Date.from(Instant.now().plus(Duration.ofMinutes(1))))
+                    .startAt(Date.from(Instant.now().plus(Duration.ofMinutes(2))))
                     .forJob(jobDetail)
                     .build();
             scheduler.scheduleJob(jobDetail, trigger);
