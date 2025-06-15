@@ -53,11 +53,17 @@ public class BidCloseJob implements Job {
     @Transactional
     public void execute(JobExecutionContext context) throws JobExecutionException {
         Long adSlotId = context.getMergedJobDataMap().getLong("adSlotId");
-        @SuppressWarnings("unchecked")
-        List<BidHistory> bidHistories = (List<BidHistory>) context.getMergedJobDataMap().get("bidHistories");
-
-        // 1. adSlot 조회 및 상태 변경
         AdSlot adSlot = adSlotRepository.findByAdSlotId(adSlotId);
+        List<BidHistory> bidHistories = bidHistoryRepository.findByAdSlotAndTimeStampBetweenOrderByTimeStampDesc(
+                adSlot,
+                adSlot.getBidStartTime(),
+                adSlot.getBidEndTime()
+        );
+
+        for (BidHistory bh :bidHistories){
+            bh.setBidStatus(BidStatus.valueOf("BIDDING"));
+        }
+        // 1. adSlot 조회 및 상태 변경
         adSlot.setAdSlotStatus(AdSlotStatus.AD_CONTINUE);
 
         // 2. 종료 시각 기준으로 (날짜+시간 전체) 그룹핑

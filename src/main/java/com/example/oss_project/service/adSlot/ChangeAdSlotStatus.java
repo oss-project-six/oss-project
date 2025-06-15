@@ -48,20 +48,11 @@ public class ChangeAdSlotStatus {
 
         adSlot.setBidTime();
         adSlot.setAdSlotStatus(AdSlotStatus.BID_CONTINUE);
-        List<BidHistory> bidHistories = bidHistoryRepository.findByAdSlotAndTimeStampBetweenOrderByTimeStampDesc(
-                adSlot,
-                adSlot.getBidStartTime(),
-                adSlot.getBidEndTime()
-        );
 
-        for (BidHistory bh :bidHistories){
-            bh.setBidStatus(BidStatus.valueOf("BIDDING"));
-        }
 
         try {
             JobDataMap map = new JobDataMap();
             map.put("adSlotId", adSlotId);
-            map.put("bidHistories",bidHistories);
 
             JobDetail jobDetail = JobBuilder.newJob(BidCloseJob.class)
                     .withIdentity("bidCloseJob_" + adSlotId)
