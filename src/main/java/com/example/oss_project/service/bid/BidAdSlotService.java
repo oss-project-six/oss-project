@@ -123,8 +123,8 @@ public class BidAdSlotService {
                 adSlot.getDescription(),
                 adSlot.getWidth(),
                 adSlot.getHeight(),
-                adSlot.getStartDate(),
-                adSlot.getStartDate().plusDays(1)
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(1)
         );
     }
 }
