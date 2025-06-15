@@ -29,7 +29,12 @@ public class AdminAdSlotSearchService {
         List<AdSlot> adSlots = adSlotRepository.findByAdmin_AdminIdWithCvInfos(adminId);
 
         List<AdminAdSlotResponseDto> dtoList = adSlots.stream().map(adSlot -> {
-            BidHistory bidHistory = bidHistoryRepository.findTopByAdSlotOrderByBidIdDesc(adSlot);
+            BidHistory bidHistory = null;
+            try {
+                bidHistory = bidHistoryRepository.findTopByAdSlotOrderByBidIdDesc(adSlot);
+            } catch (Exception e) {
+                bidHistory = null;
+            }
             Long viewCount = adSlot.getCvInfos() != null && !adSlot.getCvInfos().isEmpty()
                     ? adSlot.getCvInfos().stream().mapToLong(CvInfo::getViewCount).sum()
                     : 0L;
@@ -59,4 +64,3 @@ public class AdminAdSlotSearchService {
     }
 
 }
-
