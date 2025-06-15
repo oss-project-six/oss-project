@@ -108,7 +108,8 @@ public class AdService {
                     bidStatusOrdinal,
                     bidMoney,
                     exposureScore,
-                    viewCount
+                    viewCount,
+                    ad.getAdId()
             );
         }).collect(Collectors.toList());
 
