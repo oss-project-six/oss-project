@@ -15,6 +15,6 @@ public interface AdslotJpaRepository extends JpaRepository<AdSlot,Long> {
 
     List<AdSlot> findAll();
 
-    @Query("SELECT a FROM AdSlot a LEFT JOIN FETCH a.cvInfos WHERE a.admin.adminId = :adminId")
+    @Query("SELECT DISTINCT a FROM AdSlot a LEFT JOIN FETCH a.cvInfos WHERE a.admin.adminId = :adminId")
     List<AdSlot> findByAdmin_AdminIdWithCvInfos(@Param("adminId") Long adminId);
 }
