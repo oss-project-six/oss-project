@@ -57,7 +57,8 @@ public class BidAdSlotService {
             AdSlot adSlot,
             List<CvInfo> cvInfos,
             List<BidHistory> MonthBidHistories,
-            List<BidHistory> dayBidHistories) {
+            List<BidHistory> dayBidHistories
+    ) {
 
         LocalDateTime baseMonday = LocalDate.now()
                 .with(DayOfWeek.MONDAY)
