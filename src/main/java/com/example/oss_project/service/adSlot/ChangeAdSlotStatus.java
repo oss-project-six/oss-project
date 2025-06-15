@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -41,32 +43,42 @@ public class ChangeAdSlotStatus {
         AdSlot adSlot = adSlotRepository.findById(adSlotId)
                 .orElseThrow(() -> new RuntimeException("광고 자리를 찾을 수 없습니다."));
 
-        // 입찰 전 상태에서만 진행중으로 변경
         if (adSlot.getAdSlotStatus() == AdSlotStatus.BID_CONTINUE) {
             throw new IllegalStateException("현재 상태에서는 입찰 중으로 변경할 수 없습니다.");
         }
 
+        // 상태 변경
         adSlot.setBidTime();
         adSlot.setAdSlotStatus(AdSlotStatus.BID_CONTINUE);
 
+        // Quartz 식별자
+        JobKey jobKey     = JobKey.jobKey("bidCloseJob_" + adSlotId);
+        TriggerKey triggerKey = TriggerKey.triggerKey("bidCloseTrigger_" + adSlotId);
 
         try {
-            JobDataMap map = new JobDataMap();
-            map.put("adSlotId", adSlotId);
+            // 이미 같은 키의 잡이 있으면 삭제
+            if (scheduler.checkExists(jobKey)) {
+                scheduler.deleteJob(jobKey);
+            }
 
+            // JobDetail 생성
             JobDetail jobDetail = JobBuilder.newJob(BidCloseJob.class)
-                    .withIdentity("bidCloseJob_" + adSlotId)
-                    .usingJobData(map)
+                    .withIdentity(jobKey)
+                    .usingJobData("adSlotId", adSlotId)
                     .storeDurably()
                     .build();
 
+            // Trigger 생성 (1분 뒤 실행)
+            Date startTime = Date.from(Instant.now().plus(Duration.ofMinutes(1)));
             Trigger trigger = TriggerBuilder.newTrigger()
-                    .withIdentity("bidCloseTrigger_" + adSlotId)
-                    .startAt(Date.from(Instant.now().plus(Duration.ofMinutes(1)))) // 입찰 종료 시점에 실행
+                    .withIdentity(triggerKey)
                     .forJob(jobDetail)
+                    .startAt(startTime)
                     .build();
 
+            // 스케줄 등록
             scheduler.scheduleJob(jobDetail, trigger);
+
         } catch (Exception e){
             throw new CustomException(ErrorCode.NOT_ACESS_SCHEDULER);
         }
