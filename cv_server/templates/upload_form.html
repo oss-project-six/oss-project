@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>영상 업로드</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload-container {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4a90e2;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #357ab8;
+        }
+
+        @media (max-width: 500px) {
+            .upload-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>🎬 영상 업로드</h1>
+        <form action="/upload" enctype="multipart/form-data" method="post">
+            <label for="ad_slot_id">광고판 ID</label>
+            <input type="text" id="ad_slot_id" name="ad_slot_id" placeholder="예: AD1234" required>
+
+            <label for="file">영상 파일 선택</label>
+            <input type="file" id="file" name="file" accept="video/*" required>
+
+            <button type="submit">업로드</button>
+        </form>
+    </div>
+</body>
+</html>
