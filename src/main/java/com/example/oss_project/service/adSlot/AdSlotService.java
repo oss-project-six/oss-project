@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,6 +48,7 @@ public class AdSlotService {
         // 2. 광고 자리 저장
         AdSlot adSlot = AdSlot.builder()
                 .adSlotName(dto.slotName())
+                .startDate(LocalDateTime.now())
                 .description(dto.description())
                 .imageUrl(imageUrl)
                 .address(dto.address())
