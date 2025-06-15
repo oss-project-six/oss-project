@@ -74,8 +74,8 @@ public class AdSlot {
 
 
     public void setBidTime() {
-        //LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.of(2025, 6, 1, 8, 0); // 2025년 6월 2일 12:00로 고정
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime now = LocalDateTime.of(2025, 6, 1, 8, 0); // 2025년 6월 2일 12:00로 고정
         LocalDate tomorrow = now.toLocalDate().plusDays(1);
 
         this.bidStartTime = LocalDateTime.of(tomorrow, LocalTime.MIDNIGHT); // 내일 00:00
