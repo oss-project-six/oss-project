@@ -6,6 +6,7 @@ public record AdSummaryResponseDto(
         Integer bidStatus,      // BidHistory
         Long bid,               // BidHistory
         Double exposureScore,   // CvInfo
-        Long viewCount          // CvInfo
+        Long viewCount,         // CvInfo
+        Long adId
         // 추가 특성 가능
 ) {}
