@@ -69,7 +69,7 @@ public class ChangeAdSlotStatus {
                     .build();
 
             // Trigger 생성 (1분 뒤 실행)
-            Date startTime = Date.from(Instant.now().plus(Duration.ofMinutes(3)));
+            Date startTime = Date.from(Instant.now().plus(Duration.ofMinutes(4)));
             Trigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity(triggerKey)
                     .forJob(jobDetail)
