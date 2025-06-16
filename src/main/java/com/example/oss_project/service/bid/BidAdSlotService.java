@@ -124,7 +124,7 @@ public class BidAdSlotService {
                 adSlot.getWidth(),
                 adSlot.getHeight(),
                 LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(1)
+                LocalDateTime.now().plusMinutes(3)
         );
     }
 }
